@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE groups>
+<groups xmlns="http://www.isdc.ro/wro">
+
+  <group name="app-1.0.0">
+    <js>/deft.js</js>    
+    <js>/api.js</js>
+    <js>/direct.js</js>
+    
+<!--     <js>/app/model/Change.js</js>
+    <js>/app/model/Customer.js</js>
+    <js>/app/model/CustomerBuild.js</js>
+    <js>/app/model/LogChange.js</js>
+    <js>/app/model/LogCustomerBuild.js</js>
+    <js>/app/model/LoggingEvent.js</js>
+    <js>/app/model/Role.js</js>
+    <js>/app/model/User.js</js>
+    <js>/app/model/AccessLog.js</js>
+    <js>/app/model/BuildLine.js</js>
+    
+    <js>/app/store/Changes.js</js>
+    <js>/app/store/CustomerBuilds.js</js>
+    <js>/app/store/Customers.js</js>
+    <js>/app/store/CustomersAll.js</js>
+    <js>/app/store/LogChanges.js</js>
+    <js>/app/store/LogCustomerBuilds.js</js>
+    <js>/app/store/LoggingEvents.js</js>
+    <js>/app/store/LogLevels.js</js>
+    <js>/app/store/Navigation.js</js>
+    <js>/app/store/Roles.js</js>
+    <js>/app/store/TypeChart.js</js>
+    <js>/app/store/ChangeYears.js</js>
+    <js>/app/store/TypePerYearChart.js</js>
+    <js>/app/store/Users.js</js>
+    <js>/app/store/AccessLogs.js</js>
+    <js>/app/store/BuildLines.js</js>    
+    
+    <js>/app/controller/ChangeController.js</js>
+    <js>/app/controller/ConfigController.js</js>
+    <js>/app/controller/CustomerBuildController.js</js>
+    <js>/app/controller/CustomerController.js</js>
+    <js>/app/controller/LogController.js</js>
+    <js>/app/controller/LoggingEventController.js</js>
+    <js>/app/controller/NavigationController.js</js>
+    <js>/app/controller/UserController.js</js>
+    <js>/app/controller/TypeChartController.js</js>
+    <js>/app/controller/TypePerYearChartController.js</js>
+    <js>/app/controller/AccessLogController.js</js>
+    <js>/app/controller/EncryptPasswordController.js</js>
+    <js>/app/controller/FeaturesController.js</js>
+    <js>/app/controller/VersionBuilderController.js</js>
+    
+    <js>/app/view/change/Edit.js</js>
+    <js>/app/view/change/List.js</js>
+    
+    <js>/app/view/config/Edit.js</js>
+    
+    <js>/app/view/customer/Edit.js</js>
+    <js>/app/view/customer/List.js</js>
+    <js>/app/view/customer/Builds.js</js>
+        
+    <js>/app/view/log/Changes.js</js>    
+    <js>/app/view/log/CustomerBuilds.js</js>
+    <js>/app/view/log/Customers.js</js>
+    <js>/app/view/log/View.js</js>
+        
+    <js>/app/view/loggingevent/List.js</js>
+    
+    <js>/app/view/accesslog/List.js</js>
+    
+    <js>/app/view/navigation/Header.js</js>
+    <js>/app/view/navigation/SideBar.js</js>
+    <js>/app/view/navigation/UserOptions.js</js>
+    
+    <js>/app/view/tool/EncryptPassword.js</js>
+    <js>/app/view/tool/Features.js</js>
+    <js>/app/view/tool/VersionBuilder.js</js>
+    
+    <js>/app/view/report/TypeChart.js</js>
+    <js>/app/view/report/TypePerYearChart.js</js>
+    
+    <js>/app/view/user/Edit.js</js>
+    <js>/app/view/user/List.js</js> -->
+    
+    <js>/app/view/Viewport.js</js>    
+    
+    <js>/app.js</js>
+    
+    <css>/resources/css/app.css</css>
+  </group>
+
+</groups>
