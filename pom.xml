@@ -21,13 +21,13 @@
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.debug>true</maven.compiler.debug>
-		
+
 		<maven.build.timestamp.format>yyyy-MM-dd'T'hh:mm:ss.SSSZ</maven.build.timestamp.format>
 		<build.timestamp>${maven.build.timestamp}</build.timestamp>
-		<extjs.version>4.1.2</extjs.version>		
+		<extjs.version>4.1.2</extjs.version>
 	</properties>
-	
-	
+
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -52,6 +52,12 @@
 			<artifactId>spring-context</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${spring.version}</version>
+		</dependency>		
 
 		<dependency>
 			<groupId>cglib</groupId>
@@ -82,18 +88,23 @@
 			<artifactId>jcl-over-slf4j</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jul-to-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>		
 
 		<dependency>
 			<groupId>ch.ralscha</groupId>
 			<artifactId>extdirectspring</artifactId>
 			<version>${eds.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>ch.rasc</groupId>
-			<artifactId>embeddedtc</artifactId>
-			<version>1.2</version>
-			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-asm</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -107,14 +118,14 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>resources</groupId>
 			<artifactId>extjs</artifactId>
 			<version>${extjs.version}</version>
 			<scope>provided</scope>
-		</dependency>		
-		
+		</dependency>
+
 		<dependency>
 			<groupId>resources</groupId>
 			<artifactId>extjs-debug</artifactId>
@@ -126,7 +137,7 @@
 			<groupId>resources</groupId>
 			<artifactId>extjs-theme-steelblue</artifactId>
 			<version>1.0.0</version>
-		</dependency>		
+		</dependency>
 
 		<dependency>
 			<groupId>joda-time</groupId>
@@ -138,6 +149,24 @@
 			<groupId>ro.isdc.wro4j</groupId>
 			<artifactId>wro4j-core</artifactId>
 			<version>1.6.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-core</artifactId>
+			<version>4.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-analyzers-common</artifactId>
+			<version>4.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org</groupId>
+			<artifactId>jaudiotagger</artifactId>
+			<version>2.0.3</version>
 		</dependency>
 
 		<dependency>
@@ -156,6 +185,13 @@
 			</exclusions>
 		</dependency>
 
+		<dependency>
+			<groupId>ch.rasc</groupId>
+			<artifactId>embeddedtc</artifactId>
+			<version>1.2</version>
+			<scope>provided</scope>
+		</dependency>
+
 	</dependencies>
 
 	<repositories>
@@ -172,10 +208,11 @@
 			<url>http://repo.springsource.org/milestone</url>
 		</repository>
 
-	</repositories>s
+	</repositories>
+	s
 
 	<build>
-	
+
 		<resources>
 
 			<resource>
@@ -191,8 +228,8 @@
 					<include>version.properties</include>
 				</includes>
 			</resource>
-		</resources>	
-	
+		</resources>
+
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -204,7 +241,7 @@
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
@@ -213,8 +250,8 @@
 					<path>/</path>
 					<contextFile>${basedir}/src/main/config/tomcat.xml</contextFile>
 				</configuration>
-			</plugin>			
-					
+			</plugin>
+
 		</plugins>
 	</build>
 
