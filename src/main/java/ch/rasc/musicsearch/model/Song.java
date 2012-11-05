@@ -1,6 +1,9 @@
 package ch.rasc.musicsearch.model;
 
-public class Songs {
+import ch.ralscha.extdirectspring.generator.Model;
+
+@Model(value="MusicSearch.Song", readMethod="searchService.search")
+public class Song {
 
 	private String fileName;
 
@@ -14,9 +17,7 @@ public class Songs {
 
 	private String year;
 
-	private String genre;
-
-	private Integer duration;
+	private Integer durationInSeconds;
 
 	public String getDirectory() {
 		return directory;
@@ -58,14 +59,6 @@ public class Songs {
 		this.year = year;
 	}
 
-	public String getGenre() {
-		return genre;
-	}
-
-	public void setGenre(String genre) {
-		this.genre = genre;
-	}
-
 	public String getFileName() {
 		return fileName;
 	}
@@ -74,12 +67,12 @@ public class Songs {
 		this.fileName = name;
 	}
 
-	public Integer getDuration() {
-		return duration;
+	public Integer getDurationInSeconds() {
+		return durationInSeconds;
 	}
 
-	public void setDuration(Integer duration) {
-		this.duration = duration;
+	public void setDurationInSeconds(Integer durationInSeconds) {
+		this.durationInSeconds = durationInSeconds;
 	}
 
 }

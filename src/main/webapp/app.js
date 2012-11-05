@@ -3,13 +3,11 @@ Ext.onReady(function() {
 		
 	Ext.tip.QuickTipManager.init();
 	
-//	Ext.create('Changelog.store.Roles');
-//	Ext.create('Changelog.store.CustomersAll');
 	
-//	Deft.Injector.configure({
-//		messageBus: 'Ext.util.Observable'
-//	});
+	Deft.Injector.configure({
+		searchResultStore: 'MusicSearch.SongsStore'
+	});
 	
-	Ext.create('MusicSearch.view.Viewport');
+	Ext.create('MusicSearch.Viewport');
 	
 });

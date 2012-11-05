@@ -19,6 +19,7 @@
   <spring:eval expression="@environment.acceptsProfiles('development')" var="isDevelopment" />
   <c:if test="${isDevelopment}">  
     <link rel="stylesheet" type="text/css" href="resources/css/app.css">
+    <link rel="stylesheet" type="text/css" href="resources/ux/css/ClearButton.css">    
   </c:if> 
     
   <c:if test="${not isDevelopment}">
@@ -37,9 +38,10 @@
   <c:if test="${isDevelopment}">  
     <script src="resources/extjs/<spring:eval expression='@environment["extjs.version"]'/>/ext-all-dev.js"></script>
     <script src="deft-debug.js"></script>
-    <script src="loader.js"></script>
-    <script src="api.js"></script>
+    <script src="loader.js"></script>    
+    <script src="api.js"></script>    
     <script src="direct.js"></script>
+    <script src="app/Song.js"></script>
     <script src="app.js"></script>
   </c:if> 
     
