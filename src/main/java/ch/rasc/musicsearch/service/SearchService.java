@@ -157,8 +157,9 @@ public class SearchService {
 			logger.info("FOUND:      " + results.totalHits);
 			for (ScoreDoc scoreDoc : results.scoreDocs) {
 				Document doc = indexSearcher.doc(scoreDoc.doc);
-
+				
 				Song song = new Song();
+				song.setId(scoreDoc.doc);
 
 				song.setFileName(doc.get("directory") + "/" + doc.get("fileName"));
 				song.setTitle(doc.get("title"));

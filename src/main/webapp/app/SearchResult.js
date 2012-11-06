@@ -4,7 +4,18 @@ Ext.define('MusicSearch.SearchResult', {
 	title: 'Search Result',
 
 	searchResultStore: null,
-
+	multiSelect: true,
+	
+	viewConfig: {
+        plugins: {
+            ptype: 'gridviewdragdrop',
+            dragText: 'Drag {0} song{1} to the playlist',
+            dragGroup: 'playlistGroup',
+            enableDrop: false
+        },
+        copy: true
+	},
+	
 	initComponent: function() {
 		var me = this;
 

@@ -7,6 +7,15 @@ Ext.define('MusicSearch.Playlist', {
 
 	playlistStore: null,
 	
+	viewConfig: {
+        plugins: {
+            ptype: 'gridviewdragdrop',
+            dropGroup: 'playlistGroup',
+            enableDrag: false
+        },
+        copy: true
+	},	
+	
 	initComponent: function() {
 		var me = this;
 

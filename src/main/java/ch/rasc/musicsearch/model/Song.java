@@ -5,6 +5,8 @@ import ch.ralscha.extdirectspring.generator.Model;
 @Model(value = "MusicSearch.Song", readMethod = "searchService.search")
 public class Song {
 
+	private int id;
+
 	private String title;
 
 	private String album;
@@ -83,6 +85,14 @@ public class Song {
 
 	public void setEncoding(String encoding) {
 		this.encoding = encoding;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 }
