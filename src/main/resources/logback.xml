@@ -9,6 +9,7 @@
   </appender>
 
   <logger name="org.jaudiotagger" level="ERROR" />
+  <logger name="ch.rasc" level="INFO" />
 
   <root level="WARN">    
     <appender-ref ref="STDOUT" />

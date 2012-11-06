@@ -26,7 +26,7 @@ Ext.define('MusicSearch.Viewport', {
 					padding: 10,
 					value: 'Please enter a search term'
 				} ]
-			}, Ext.create('MusicSearch.Searchresultlist', {
+			}, Ext.create('MusicSearch.SearchResult', {
 				itemId: 'searchResultGridPanel',
 				region: 'center',
 				padding: 10

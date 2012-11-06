@@ -5,12 +5,32 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexableField;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParserBase;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -29,8 +49,47 @@ public class SearchService {
 
 	private static final Log logger = LogFactory.getLog(SearchService.class);
 
+	private final static String[] FIELDS = { "fileName", "directory", "title", "artist", "album", "comment", "year",
+			"composer" };
+
 	@Autowired
 	private Environment environement;
+
+	private Directory indexDirectory;
+
+	private IndexReader indexReader;
+
+	private IndexSearcher indexSearcher;
+
+	@PostConstruct
+	public void init() {
+		Path ixDir = Paths.get(environement.getProperty("indexDir"));
+		try {
+			indexDirectory = FSDirectory.open(ixDir.toFile());
+			indexReader = DirectoryReader.open(indexDirectory);
+			indexSearcher = new IndexSearcher(indexReader);
+		} catch (IOException e) {
+			logger.error("init searcher service", e);
+		}
+	}
+
+	@PreDestroy
+	public void destroy() {
+		if (indexReader != null) {
+			try {
+				indexReader.close();
+			} catch (IOException e) {
+				// ignore exception
+			}
+		}
+		if (indexDirectory != null) {
+			try {
+				indexDirectory.close();
+			} catch (IOException e) {
+				// ignore exception
+			}
+		}
+	}
 
 	@ExtDirectMethod
 	public Info getInfo() {
@@ -75,70 +134,64 @@ public class SearchService {
 		logger.info("SEARCH FOR: " + filterValue);
 
 		List<Song> resultList = Lists.newArrayList();
-		Song s = new Song();
-		s.setAlbum("album");
-		s.setArtist("artist");
-		s.setFileName("dir");
-		s.setEncoding("mp3");
-		s.setDurationInSeconds(100);
-		s.setBitrate(10000L);
-		s.setTitle("title");
-		s.setYear("year");
-		resultList.add(s);
 
-		// Searcher searcher = new IndexSearcher(indexDir);
-		// try {
-		// String[] fields = { "title", "author", "album", "date", "fileName",
-		// "directory" };
-		// MultiFieldQueryParser parser = new MultiFieldQueryParser(fields, new
-		// StandardAnalyzer());
-		//
-		// parser.setDefaultOperator(QueryParser.AND_OPERATOR);
-		// parser.setAllowLeadingWildcard(true);
-		//
-		// Query query;
-		// try {
-		// query = parser.parse(queryString);
-		// } catch (ParseException e) {
-		// query = parser.parse(QueryParser.escape(queryString));
-		// }
-		//
-		// Hits hits = searcher.search(query);
-		// logger.info("FOUND:      " + hits.length());
-		//
-		// for (int i = 0; i < hits.length(); i++) {
-		// Songs song = new Songs();
-		// song.setFileName(hits.doc(i).get("fileName"));
-		//
-		// File dir = new File(hits.doc(i).get("directory"));
-		// File f = new File(dir, song.getFileName());
-		// song.setDirectory(f.getPath());
-		//
-		// song.setArtist(hits.doc(i).get("author"));
-		// song.setYear(hits.doc(i).get("date"));
-		// song.setAlbum(hits.doc(i).get("album"));
-		// song.setTitle(hits.doc(i).get("title"));
-		//
-		// if (StringUtils.isBlank(song.getArtist()) &&
-		// StringUtils.isBlank(song.getAlbum())
-		// && StringUtils.isBlank(song.getTitle())) {
-		// song.setTitle(song.getFileName());
-		// }
-		//
-		// String durationString = hits.doc(i).get("duration");
-		// if (StringUtils.isNotBlank(durationString)) {
-		// song.setDuration(new Integer(durationString));
-		// } else {
-		// song.setDuration(null);
-		// }
-		//
-		// resultList.add(song);
-		// }
-		// } finally {
-		// if (searcher != null) {
-		// searcher.close();
-		// }
-		// }
+		try (Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_40)) {
+
+			MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_40, FIELDS, analyzer);
+			parser.setDefaultOperator(QueryParserBase.AND_OPERATOR);
+			parser.setAllowLeadingWildcard(true);
+
+			Query query;
+			try {
+				query = parser.parse(filterValue);
+			} catch (ParseException e) {
+				try {
+					query = parser.parse(QueryParserBase.escape(filterValue));
+				} catch (ParseException e1) {
+					logger.error("lucene query parse", e1);
+					return Collections.emptyList();
+				}
+			}
+
+			TopDocs results = indexSearcher.search(query, 10000);
+			logger.info("FOUND:      " + results.totalHits);
+			for (ScoreDoc scoreDoc : results.scoreDocs) {
+				Document doc = indexSearcher.doc(scoreDoc.doc);
+
+				Song song = new Song();
+
+				song.setFileName(doc.get("directory") + "/" + doc.get("fileName"));
+				song.setTitle(doc.get("title"));
+				song.setArtist(doc.get("artist"));
+				song.setAlbum(doc.get("album"));
+				song.setYear(doc.get("year"));
+
+				if (StringUtils.isBlank(song.getArtist()) && StringUtils.isBlank(song.getAlbum())
+						&& StringUtils.isBlank(song.getTitle())) {
+					song.setTitle(song.getFileName());
+				}
+
+				IndexableField field = doc.getField("duration");
+				if (field != null) {
+					song.setDurationInSeconds(field.numericValue().intValue());
+				} else {
+					song.setDurationInSeconds(null);
+				}
+
+				field = doc.getField("bitrate");
+				if (field != null) {
+					song.setBitrate(field.numericValue().longValue());
+				} else {
+					song.setBitrate(null);
+				}
+
+				resultList.add(song);
+
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		return resultList;
 

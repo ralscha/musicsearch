@@ -22,11 +22,15 @@ Ext.define('MusicSearch.ViewportController', {
 	
 	onSearchTextFieldFilter: function(cmp, newValue) {
 		var searchResultStore = this.getSearchResultGridPanel().getStore();
-		if (newValue) {
+		if (newValue) {			
+			searchResultStore.remoteFilter = false;
+			searchResultStore.clearFilter(true);
+			searchResultStore.remoteFilter = true;
 			searchResultStore.removeAll();
 			searchResultStore.filter('filter', newValue);
 		} else {
 			searchResultStore.removeAll();
+			this.getSearchInfoDisplayField().setValue('Please enter a search term');
 		}
 	},
 	
