@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.google.common.io.ByteStreams;
-import com.google.common.net.MediaType;
 
 @Controller
 public class DownloadMusicController {
@@ -30,8 +29,7 @@ public class DownloadMusicController {
 	private Environment environement;
 
 	@RequestMapping("/downloadMusic")
-	public void download(@RequestParam(value = "name", required = true) String name,
-			@RequestParam(value = "encoding", required = true) String encoding, HttpServletResponse response)
+	public void download(@RequestParam(value = "name", required = true) String name, HttpServletResponse response)
 			throws IOException {
 
 		logger.info("downloading: " + name);
@@ -39,19 +37,6 @@ public class DownloadMusicController {
 		Path musicFile = Paths.get(environement.getProperty("musicDir")).resolve(name);
 
 		response.setContentLength((int) Files.size(musicFile));
-
-		if ("mp3".equals(encoding)) {
-			response.setContentType(MediaType.MPEG_AUDIO.toString());
-		} else if ("aac".equals(encoding)) {
-			response.setContentType("audio/aac");
-		}
-
-		// AddType audio/aac .aac
-		// AddType audio/mp4 .mp4 .m4a
-		// AddType audio/mpeg .mp1 .mp2 .mp3 .mpg .mpeg
-		// AddType audio/ogg .oga .ogg
-		// AddType audio/wav .wav
-		// AddType audio/webm .webm
 
 		try (FileInputStream fis = new FileInputStream(musicFile.toFile());
 				BufferedInputStream bis = new BufferedInputStream(fis);

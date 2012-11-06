@@ -157,7 +157,7 @@ public class SearchService {
 			logger.info("FOUND:      " + results.totalHits);
 			for (ScoreDoc scoreDoc : results.scoreDocs) {
 				Document doc = indexSearcher.doc(scoreDoc.doc);
-				
+
 				Song song = new Song();
 				song.setId(scoreDoc.doc);
 
@@ -166,6 +166,8 @@ public class SearchService {
 				song.setArtist(doc.get("artist"));
 				song.setAlbum(doc.get("album"));
 				song.setYear(doc.get("year"));
+
+				song.setEncoding(doc.get("encoding"));
 
 				if (StringUtils.isBlank(song.getArtist()) && StringUtils.isBlank(song.getAlbum())
 						&& StringUtils.isBlank(song.getTitle())) {

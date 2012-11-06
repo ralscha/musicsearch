@@ -44,6 +44,7 @@
     <script src="direct.js"></script>
     <script src="app/Song.js"></script>
     <script src="app.js"></script>
+    <script src="soundmanager2.js"></script>
   </c:if> 
     
   <c:if test="${not isDevelopment}">

@@ -6,60 +6,60 @@ Ext.define('MusicSearch.Playlist', {
 	sortableColumns: false,
 
 	playlistStore: null,
-	
+
 	viewConfig: {
-        plugins: {
-            ptype: 'gridviewdragdrop',
-            dropGroup: 'playlistGroup',
-            enableDrag: false
-        },
-        copy: true
-	},	
-	
+		plugins: {
+			ptype: 'gridviewdragdrop',
+			dropGroup: 'playlistGroup',
+			enableDrag: false
+		},
+		copy: true
+	},
+
 	initComponent: function() {
 		var me = this;
 
 		me.store = me.playlistStore;
-		
+
 		me.columns = {
-				defaults: {
-					hideable: false
-				},
-				items: [ {
-					xtype: 'gridcolumn',
-					dataIndex: 'title',
-					text: 'Title',
-					flex: 4
-				}, {
-					xtype: 'gridcolumn',
-					dataIndex: 'album',
-					text: 'Album',
-					flex: 2
-				}, {
-					xtype: 'gridcolumn',
-					dataIndex: 'artist',
-					text: 'Artist',
-					flex: 2
-				}, {
-					xtype: 'gridcolumn',
-					dataIndex: 'year',
-					text: 'Year'
-				}, {
-					xtype: 'gridcolumn',
-					dataIndex: 'durationInSeconds',
-					text: 'Duration',
-					align: 'right',
-					renderer: function(value) {
-						return value ? MusicSearch.Utils.secondsToHms(value) : '';
-					}
-				}, {
-					xtype: 'numbercolumn',
-					dataIndex: 'bitrate',
-					text: 'Bitrate',
-					align: 'right',
-					format: '0'
-				} ]
-			};
+			defaults: {
+				hideable: false
+			},
+			items: [ {
+				xtype: 'gridcolumn',
+				dataIndex: 'title',
+				text: 'Title',
+				flex: 4
+			}, {
+				xtype: 'gridcolumn',
+				dataIndex: 'album',
+				text: 'Album',
+				flex: 2
+			}, {
+				xtype: 'gridcolumn',
+				dataIndex: 'artist',
+				text: 'Artist',
+				flex: 2
+			}, {
+				xtype: 'gridcolumn',
+				dataIndex: 'year',
+				text: 'Year'
+			}, {
+				xtype: 'gridcolumn',
+				dataIndex: 'durationInSeconds',
+				text: 'Duration',
+				align: 'right',
+				renderer: function(value) {
+					return value ? MusicSearch.Utils.secondsToHms(value) : '';
+				}
+			}, {
+				xtype: 'numbercolumn',
+				dataIndex: 'bitrate',
+				text: 'Bitrate',
+				align: 'right',
+				format: '0'
+			} ]
+		};
 
 		me.dockedItems = [ {
 			xtype: 'toolbar',
@@ -108,25 +108,22 @@ Ext.define('MusicSearch.Playlist', {
 			} ]
 		}, {
 
-			
 			xtype: 'toolbar',
 			dock: 'right',
-			items: [ 
-				'->',
-				{
-					xtype: 'slider',
-					itemId: 'volumeSlider',
-					maxValue: 100,
-					height: 160,
-					vertical: true
-				}, {
-					xtype: 'image',
-					src: 'resources/images/loudspeaker.png',
-					height: 24,
-					width: 24
-				}]
-			
-			
+			items: [ '->', {
+				xtype: 'slider',
+				itemId: 'volumeSlider',
+				maxValue: 100,
+				value: 50,
+				height: 160,
+				vertical: true
+			}, {
+				xtype: 'image',
+				src: 'resources/images/loudspeaker.png',
+				height: 24,
+				width: 24
+			} ]
+
 		} ];
 
 		me.callParent(arguments);

@@ -63,7 +63,7 @@ public class Indexer {
 			IndexFileWalker walker = null;
 
 			try (IndexWriter writer = new IndexWriter(dir, iwc)) {
-				walker = new IndexFileWalker(writer);
+				walker = new IndexFileWalker(writer, musicDir);
 				Files.walkFileTree(musicDir, walker);
 
 				writer.forceMerge(1);

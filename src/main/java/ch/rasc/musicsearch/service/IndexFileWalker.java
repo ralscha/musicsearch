@@ -33,8 +33,11 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 
 	private final IndexWriter writer;
 
-	public IndexFileWalker(IndexWriter writer) {
+	private final Path baseDir;
+
+	public IndexFileWalker(IndexWriter writer, Path baseDir) {
 		this.writer = writer;
+		this.baseDir = baseDir;
 	}
 
 	@Override
@@ -52,10 +55,47 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 			Document doc = new Document();
 
 			doc.add(new TextField("fileName", file.getFileName().toString(), Field.Store.YES));
-			doc.add(new TextField("directory", file.getParent().getFileName().toString(), Field.Store.YES));
+			doc.add(new TextField("directory", baseDir.relativize(file.getParent()).toString(), Field.Store.YES));
 			doc.add(new LongField("size", Files.size(file), Field.Store.YES));
 			doc.add(new LongField("bitrate", ah.getBitRateAsNumber(), Field.Store.YES));
-			doc.add(new StoredField("encoding", ah.getEncodingType().toLowerCase()));
+
+			String encoding = null;
+			String encodingType = ah.getEncodingType().toLowerCase();
+
+			if ("mp3".equals(encodingType)) {
+				encoding = "audio/mpeg";
+			} else if ("aac".equals(encodingType)) {
+				encoding = "audio/aac";
+			} else {
+				System.out.println("NOT FOUND: " + encodingType);
+			}
+
+			doc.add(new StoredField("encoding", encoding));
+
+			// 'mp3': {
+			// 'type': ['audio/mpeg; codecs="mp3"', 'audio/mpeg', 'audio/mp3',
+			// 'audio/MPA', 'audio/mpa-robust'],
+			// 'required': true
+			// },
+			//
+			// 'mp4': {
+			// 'related': ['aac','m4a'], // additional formats under the MP4
+			// container
+			// 'type': ['audio/mp4; codecs="mp4a.40.2"', 'audio/aac',
+			// 'audio/x-m4a', 'audio/MP4A-LATM', 'audio/mpeg4-generic'],
+			// 'required': false
+			// },
+			//
+			// 'ogg': {
+			// 'type': ['audio/ogg; codecs=vorbis'],
+			// 'required': false
+			// },
+			//
+			// 'wav': {
+			// 'type': ['audio/wav; codecs="1"', 'audio/wav', 'audio/wave',
+			// 'audio/x-wav'],
+			// 'required': false
+			// }
 
 			String value = tag.getFirst(FieldKey.TITLE);
 			if (StringUtils.isNotBlank(value)) {

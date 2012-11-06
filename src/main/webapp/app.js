@@ -2,18 +2,24 @@ Ext.define('MusicSearch.App', {
 	extend: 'Deft.mvc.Application',
 
 	init: function() {
-		console.log('application init');
 
-		Ext.fly('followingBallsG').destroy();
+		soundManager.setup({
+			url: '',
+			flashVersion: 9, // optional: shiny features (default = 8)
+			onready: function() {
+				Ext.fly('followingBallsG').destroy();
 
-		Ext.tip.QuickTipManager.init();
+				Ext.tip.QuickTipManager.init();
 
-		Deft.Injector.configure({
-			searchResultStore: 'MusicSearch.SongsStore',
-			playlistStore: 'MusicSearch.PlaylistStore'
+				Deft.Injector.configure({
+					searchResultStore: 'MusicSearch.SongsStore',
+					playlistStore: 'MusicSearch.PlaylistStore'
+				});
+
+				Ext.create('MusicSearch.Viewport');
+			}
 		});
 
-		Ext.create('MusicSearch.Viewport');
 	}
 });
 
