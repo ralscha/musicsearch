@@ -12,6 +12,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.LongField;
+import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.jaudiotagger.audio.AudioFile;
@@ -53,6 +54,8 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 			doc.add(new TextField("fileName", file.getFileName().toString(), Field.Store.YES));
 			doc.add(new TextField("directory", file.getParent().getFileName().toString(), Field.Store.YES));
 			doc.add(new LongField("size", Files.size(file), Field.Store.YES));
+			doc.add(new LongField("bitrate", ah.getBitRateAsNumber(), Field.Store.YES));
+			doc.add(new StoredField("encoding", ah.getEncodingType().toLowerCase()));
 
 			String value = tag.getFirst(FieldKey.TITLE);
 			if (StringUtils.isNotBlank(value)) {

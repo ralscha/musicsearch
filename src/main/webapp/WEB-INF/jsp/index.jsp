@@ -29,10 +29,11 @@
 </head>
 <body>
   <!--[if lt IE 8]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
-  <div id="appLoadingIndicator">
-    <span></span>
-    <span></span>
-    <span></span>
+  <div id="followingBallsG">
+    <div id="followingBallsG_1" class="followingBallsG"></div>
+    <div id="followingBallsG_2" class="followingBallsG"></div>
+    <div id="followingBallsG_3" class="followingBallsG"></div>
+    <div id="followingBallsG_4" class="followingBallsG"></div>
   </div>
 	
   <c:if test="${isDevelopment}">  

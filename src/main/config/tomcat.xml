@@ -3,7 +3,7 @@
     <!-- Uncomment the following line to activate production profile --> 
     <Environment name="spring.profiles.active" value="development" type="java.lang.String" override="false"/>
 
-    <Environment name="musicDir" value="E:/_download/music" type="java.lang.String" override="false"/>
-    <Environment name="indexDir" value="e:/temp/msearch_index" type="java.lang.String" override="false"/>
+    <Environment name="musicDir" value="E:/music" type="java.lang.String" override="false"/>
+    <Environment name="indexDir" value="e:/music_index" type="java.lang.String" override="false"/>
 
 </Context>
