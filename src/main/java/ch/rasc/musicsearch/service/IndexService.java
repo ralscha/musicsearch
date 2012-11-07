@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 public class IndexService {
 
 	private static final Log logger = LogFactory.getLog(IndexService.class);
-	
+
 	private Directory indexDirectory;
 
 	private IndexReader indexReader;
@@ -31,8 +31,7 @@ public class IndexService {
 
 	@Autowired
 	private Environment environement;
-	
-	
+
 	@PostConstruct
 	public void init() {
 		Path ixDir = Paths.get(environement.getProperty("indexDir"));
@@ -65,8 +64,6 @@ public class IndexService {
 
 	public IndexSearcher getIndexSearcher() {
 		return indexSearcher;
-	}	
-	
-	
-	
+	}
+
 }

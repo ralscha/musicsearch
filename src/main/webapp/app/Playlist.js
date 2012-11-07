@@ -122,6 +122,14 @@ Ext.define('MusicSearch.Playlist', {
 				xtype: 'tbtext',
 				itemId: 'progressText',
 				text: '0:00/0:00'
+			}, '->', {
+				xtype: 'button',
+				text: 'Download Playlist',
+				icon: '../resources/images/download.png',
+				disabled: true,
+				href: app_context_path + 'downloadMusicZip',
+				hrefTarget: '_self',
+				itemId: 'downloadPlaylistButton'
 			} ]
 		}, {
 

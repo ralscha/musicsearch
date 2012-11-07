@@ -53,7 +53,8 @@ Ext.define('MusicSearch.PlaylistController', {
 		volumeSlider: {
 			change: 'onVolumeSliderChange'
 		},
-		progressText: true
+		progressText: true,
+		downloadPlaylistButton: true
 	},
 
 	init: function() {
@@ -63,6 +64,15 @@ Ext.define('MusicSearch.PlaylistController', {
 		if (store.getCount() > 0) {
 			this.getPlayButton().enable();
 			this.getClearButton().enable();
+			this.getDownloadPlaylistButton().enable();
+			
+			var ids = [];
+			store.each(function(item) {
+				ids.push(item.getId());
+			});
+			var params = {};
+			params.sf = ids.join(',');
+			this.getDownloadPlaylistButton().setParams(params);
 		} else {
 			this.getPlayButton().disable();
 			this.getPauseButton().disable();
@@ -72,6 +82,7 @@ Ext.define('MusicSearch.PlaylistController', {
 			this.getRemoveButton().disable();
 			this.getClearButton().disable();
 			this.getProgressSlider().disable();
+			this.getDownloadPlaylistButton().disable();
 		}
 		
 		this.togglePrevNextButton();

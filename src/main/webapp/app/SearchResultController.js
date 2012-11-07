@@ -23,6 +23,26 @@ Ext.define('MusicSearch.SearchResultController', {
 		}
 	},
 
+	init: function() {
+		
+		searchService.getInfo(function(result) {
+			var d = result.totalDuration;
+			
+			var days = Math.floor(d / (3600 * 24));
+			var h = Math.floor(d % (3600 * 24) / 3600);
+			var m = Math.floor(d % 3600 / 60);
+			var s = Math.floor(d % 3600 % 60);
+			
+			var duration = days > 0 ? days + " Days " : "";
+			duration += h > 0 ? h + " Hours " : "";
+			duration += m > 0 ? m + " Minutes " : "";
+			duration += s > 0 ? s + " Seconds" : "";
+			
+			this.getView().setTitle('Search Music: Total ' + result.noOfSongs + ' songs ('+duration+')');
+		}, this);
+		
+	},
+	
 	onSelectionChange: function() {
 		var params = {};
 		
