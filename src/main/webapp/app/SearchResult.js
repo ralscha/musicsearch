@@ -75,6 +75,14 @@ Ext.define('MusicSearch.SearchResult', {
 				itemId: 'searchInfoDisplayField',
 				padding: '3 3 3 10',
 				value: 'Please enter a search term'
+			}, '->', {
+				xtype: 'button',
+				text: 'Download Selected',
+				icon: '../resources/images/download.png',
+				disabled: true,
+				href: app_context_path + 'downloadMusicZip',
+				hrefTarget: '_self',
+				itemId: 'downloadSelectedButton'
 			} ]
 		} ]
 

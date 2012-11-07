@@ -9,27 +9,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParserBase;
-import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -55,41 +47,8 @@ public class SearchService {
 	@Autowired
 	private Environment environement;
 
-	private Directory indexDirectory;
-
-	private IndexReader indexReader;
-
-	private IndexSearcher indexSearcher;
-
-	@PostConstruct
-	public void init() {
-		Path ixDir = Paths.get(environement.getProperty("indexDir"));
-		try {
-			indexDirectory = FSDirectory.open(ixDir.toFile());
-			indexReader = DirectoryReader.open(indexDirectory);
-			indexSearcher = new IndexSearcher(indexReader);
-		} catch (IOException e) {
-			logger.error("init searcher service", e);
-		}
-	}
-
-	@PreDestroy
-	public void destroy() {
-		if (indexReader != null) {
-			try {
-				indexReader.close();
-			} catch (IOException e) {
-				// ignore exception
-			}
-		}
-		if (indexDirectory != null) {
-			try {
-				indexDirectory.close();
-			} catch (IOException e) {
-				// ignore exception
-			}
-		}
-	}
+	@Autowired
+	private IndexService indexService;
 
 	@ExtDirectMethod
 	public Info getInfo() {
@@ -153,10 +112,10 @@ public class SearchService {
 				}
 			}
 
-			TopDocs results = indexSearcher.search(query, 10000);
+			TopDocs results = indexService.getIndexSearcher().search(query, 10000);
 			logger.info("FOUND:      " + results.totalHits);
 			for (ScoreDoc scoreDoc : results.scoreDocs) {
-				Document doc = indexSearcher.doc(scoreDoc.doc);
+				Document doc = indexService.getIndexSearcher().doc(scoreDoc.doc);
 
 				Song song = new Song();
 				song.setId(scoreDoc.doc);

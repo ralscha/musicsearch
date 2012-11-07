@@ -1,8 +1,9 @@
 Ext.define('MusicSearch.SearchResultController', {
 	extend: 'Deft.mvc.ViewController',
-	inject: 'searchResultStore',
+	inject: ['searchResultStore', 'playlistStore'],
 
 	searchResultStore: null,
+	playlistStore: null,
 
 	observe: {
 		searchResultStore: {
@@ -14,9 +15,38 @@ Ext.define('MusicSearch.SearchResultController', {
 		searchTextField: {
 			filter: 'onSearchTextFieldFilter'
 		},
-		searchInfoDisplayField: true
+		downloadSelectedButton: true,
+		searchInfoDisplayField: true,
+		view: {
+			selectionchange: 'onSelectionChange',
+			itemdblclick: 'onItemDblClick'
+		}
 	},
 
+	onSelectionChange: function() {
+		var params = {};
+		
+		if (this.getView().getSelectionModel().hasSelection()) {
+			this.getDownloadSelectedButton().enable();
+			
+			var selectedResults = this.getView().getSelectionModel().getSelection();
+			var ids = Ext.Array.map(selectedResults, function(item) {
+				return item.getId();
+			});
+			params.sf = ids.join(',');
+		} else {			
+			this.getDownloadSelectedButton().disable();
+		}
+		
+		this.getDownloadSelectedButton().setParams(params);
+	},
+	
+	onItemDblClick: function(view, record) {
+		if (this.playlistStore.indexOf(record) === -1) {
+			this.playlistStore.add(record);
+		}
+	},	
+	
 	onSearchTextFieldFilter: function(cmp, newValue) {		
 		var filterValue = Ext.String.trim(newValue) || '';
 		

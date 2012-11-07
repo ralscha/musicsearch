@@ -42,11 +42,11 @@
   	
   <c:if test="${isDevelopment}">  
     <script src="resources/extjs/<spring:eval expression='@environment["extjs.version"]'/>/ext-all-dev.js"></script>
-    <script src="deft-debug.js"></script>
+    <script src="deft.js"></script>
     <script src="loader.js"></script>    
     <script src="api.js"></script>    
     <script src="direct.js"></script>
-    <script src="soundmanager2.js"></script>
+    <script src="soundmanager2-nodebug-jsmin.js"></script>
     <script src="app.js"></script>    
   </c:if> 
     

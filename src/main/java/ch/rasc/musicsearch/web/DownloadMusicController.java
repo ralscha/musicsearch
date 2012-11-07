@@ -10,40 +10,45 @@ import java.nio.file.Paths;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.lucene.document.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import ch.rasc.musicsearch.service.IndexService;
+
 import com.google.common.io.ByteStreams;
 
 @Controller
 public class DownloadMusicController {
 
-	private static final Log logger = LogFactory.getLog(DownloadMusicController.class);
-
 	@Autowired
 	private Environment environement;
 
+	@Autowired
+	private IndexService indexService;
+
 	@RequestMapping("/downloadMusic")
-	public void download(@RequestParam(value = "name", required = true) String name, HttpServletResponse response)
+	public void download(@RequestParam(value = "docId", required = true) int docId, HttpServletResponse response)
 			throws IOException {
 
-		logger.info("downloading: " + name);
+		Document doc = indexService.getIndexSearcher().doc(docId);
 
-		Path musicFile = Paths.get(environement.getProperty("musicDir")).resolve(name);
+		if (doc != null) {
 
-		response.setContentLength((int) Files.size(musicFile));
+			Path musicFile = Paths.get(environement.getProperty("musicDir"), doc.get("directory"), doc.get("fileName"));
 
-		try (FileInputStream fis = new FileInputStream(musicFile.toFile());
-				BufferedInputStream bis = new BufferedInputStream(fis);
-				OutputStream out = response.getOutputStream();) {
+			response.setContentLength((int) Files.size(musicFile));
 
-			ByteStreams.copy(bis, out);
+			try (FileInputStream fis = new FileInputStream(musicFile.toFile());
+					BufferedInputStream bis = new BufferedInputStream(fis);
+					OutputStream out = response.getOutputStream();) {
 
+				ByteStreams.copy(bis, out);
+
+			}
 		}
 
 	}

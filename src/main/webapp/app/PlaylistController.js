@@ -20,7 +20,8 @@ Ext.define('MusicSearch.PlaylistController', {
 			}
 		},
 		view: {
-			selectionchange: 'onSelectionchange'
+			selectionchange: 'onSelectionchange',
+			itemdblclick: 'onItemDblClick'
 		},
 		playButton: {
 			click: 'onPlayButtonClick'
@@ -31,8 +32,12 @@ Ext.define('MusicSearch.PlaylistController', {
 		stopButton: {
 			click: 'onStopButtonClick'
 		},
-		prevButton: true,
-		nextButton: true,
+		prevButton: {
+			click: 'onPrevButtonClick'
+		},
+		nextButton: {
+			click: 'onNextButtonClick'
+		},
 		removeButton: {
 			click: 'onRemoveButtonClick'
 		},
@@ -68,15 +73,21 @@ Ext.define('MusicSearch.PlaylistController', {
 			this.getClearButton().disable();
 			this.getProgressSlider().disable();
 		}
+		
+		this.togglePrevNextButton();
+				
 	},
 
 	onSelectionchange: function() {
-		var selectedModels = this.getView().getSelectionModel().getSelection();
-		if (selectedModels && selectedModels.length >= 1) {
+		if (this.getView().getSelectionModel().hasSelection()) {
 			this.getRemoveButton().enable();
 		} else {
 			this.getRemoveButton().disable();
 		}
+	},
+	
+	onItemDblClick: function(view, record) {
+		this.playSong(record);		
 	},
 
 	onPlayButtonClick: function() {
@@ -103,6 +114,25 @@ Ext.define('MusicSearch.PlaylistController', {
 	
 	onStopButtonClick: function() {
 		this.stopSong();
+		this.togglePrevNextButton();
+	},
+	
+	onPrevButtonClick: function() {
+		var songIndex = this.playlistStore.findExact('playing', true);
+		if (songIndex !== -1) {			
+			if (songIndex > 0) {
+				this.playSong(this.playlistStore.getAt(songIndex-1));
+			}
+		}
+	},
+	
+	onNextButtonClick: function() {
+		var songIndex = this.playlistStore.findExact('playing', true);
+		if (songIndex !== -1) {			
+			if (songIndex < this.playlistStore.getCount()-1) {
+				this.playSong(this.playlistStore.getAt(songIndex+1));
+			}
+		}		
 	},
 
 	onRemoveButtonClick: function() {
@@ -162,6 +192,27 @@ Ext.define('MusicSearch.PlaylistController', {
 		this.getPauseButton().enable();
 		this.getPauseButton().toggle(state, false);
 	},
+	
+	togglePrevNextButton: function() {
+		var songIndex = this.playlistStore.findExact('playing', true);
+		if (songIndex !== -1) {
+			if (songIndex > 0) {
+				this.getPrevButton().enable();
+			} else {
+				this.getPrevButton().disable();
+			}
+			
+			if (songIndex < this.playlistStore.getCount()-1) {
+				this.getNextButton().enable();
+			} else {
+				this.getNextButton().disable();
+			}
+			
+		} else {
+			this.getPrevButton().disable();
+			this.getNextButton().disable();
+		}
+	},
 
 	setNowPlaying: function(song) {
 		if (song) {
@@ -199,7 +250,7 @@ Ext.define('MusicSearch.PlaylistController', {
 		
 		this.currentSound = soundManager.createSound({
 			id: 'currentSound',
-			url: app_context_path + 'downloadMusic?name=' + song.fileName,
+			url: app_context_path + 'downloadMusic?docId=' + song.id,
 			type: song.encoding,		
 			autoLoad: true,
 			autoPlay: true,
@@ -227,6 +278,8 @@ Ext.define('MusicSearch.PlaylistController', {
 		song.playing = true;
 		this.getView().getSelectionModel().select([record]);
 		this.getView().getView().refresh();	
+		
+		this.togglePrevNextButton();
 	},
 	
 	stopSong: function() {
@@ -280,8 +333,8 @@ Ext.define('MusicSearch.PlaylistController', {
 	
 	onPlaylistGridPanelViewBeforedrop: function(node, data, overModel,
 			dropPosition, dropFunction, eOpts) {
-		for ( var i = 0; i < data.records.length; i++) {
-			if (this.playlistStore.indexOfId(data.records[i].getId()) === -1) {
+		for (var i = 0; i < data.records.length; i++) {
+			if (this.playlistStore.indexOf(data.records[i]) === -1) {
 				this.playlistStore.add(data.records[i]);
 			}
 		}
