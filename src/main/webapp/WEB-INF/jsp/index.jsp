@@ -38,6 +38,9 @@
   
   <script>
     var app_context_path = '<%= request.getContextPath() %>';
+    if (!/\/$/.test(app_context_path)) {
+      app_context_path += '/';
+    }
   </script>
   	
   <c:if test="${isDevelopment}">  

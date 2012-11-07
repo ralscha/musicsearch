@@ -78,7 +78,7 @@ Ext.define('MusicSearch.SearchResult', {
 			}, '->', {
 				xtype: 'button',
 				text: 'Download Selected',
-				icon: '../resources/images/download.png',
+				icon: app_context_path + 'resources/images/download.png',
 				disabled: true,
 				href: app_context_path + 'downloadMusicZip',
 				hrefTarget: '_self',

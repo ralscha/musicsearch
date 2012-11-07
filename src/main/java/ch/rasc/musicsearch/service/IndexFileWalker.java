@@ -46,6 +46,9 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 		try {
 			AudioFile audioFile = AudioFileIO.read(file.toFile());
 			Tag tag = audioFile.getTag();
+			if (tag == null) {
+				return FileVisitResult.CONTINUE;
+			}
 			AudioHeader ah = audioFile.getAudioHeader();
 
 			int trackLength = ah.getTrackLength();
