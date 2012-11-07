@@ -9,6 +9,9 @@ Ext.define('MusicSearch.Playlist', {
 	playlistStore: null,
 
 	viewConfig: {
+		getRowClass: function(rec, idx, rowPrms, ds) {
+			return rec.data.playing ? 'playlist-playing-row' : '';
+		},		
 		plugins: {
 			ptype: 'gridviewdragdrop',
 			dropGroup: 'playlistGroup',
@@ -78,6 +81,12 @@ Ext.define('MusicSearch.Playlist', {
 				icon: '../resources/images/media_pause.png',
 				enableToggle: true,
 				itemId: 'pauseButton'
+			}, {
+				xtype: 'button',
+				text: 'Stop',
+				disabled: true,
+				icon: '../resources/images/media_stop.png',
+				itemId: 'stopButton'
 			}, {
 				xtype: 'button',
 				text: 'Prev',

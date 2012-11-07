@@ -28,7 +28,9 @@ Ext.define('MusicSearch.PlaylistController', {
 		pauseButton: {
 			click: 'onPauseButtonClick'
 		},
-
+		stopButton: {
+			click: 'onStopButtonClick'
+		},
 		prevButton: true,
 		nextButton: true,
 		removeButton: {
@@ -59,6 +61,7 @@ Ext.define('MusicSearch.PlaylistController', {
 		} else {
 			this.getPlayButton().disable();
 			this.getPauseButton().disable();
+			this.getStopButton().disable();
 			this.getPrevButton().disable();
 			this.getNextButton().disable();
 			this.getRemoveButton().disable();
@@ -79,9 +82,9 @@ Ext.define('MusicSearch.PlaylistController', {
 	onPlayButtonClick: function() {
 		var selectedModels = this.getView().getSelectionModel().getSelection();
 		if (selectedModels && selectedModels.length >= 1) {
-			this.playSong(selectedModels[0].data);
+			this.playSong(selectedModels[0]);
 		} else {
-			this.playSong(this.playlistStore.first().data);
+			this.playSong(this.playlistStore.first());
 		}
 	},
 
@@ -97,6 +100,10 @@ Ext.define('MusicSearch.PlaylistController', {
 
 		}
 	},
+	
+	onStopButtonClick: function() {
+		this.stopSong();
+	},
 
 	onRemoveButtonClick: function() {
 		var selectedModels = this.getView().getSelectionModel().getSelection();
@@ -109,23 +116,14 @@ Ext.define('MusicSearch.PlaylistController', {
 		});
 		
 		if (playing) {
-			if (this.currentSound) {
-				this.currentSound.stop();
-				this.currentSound.destruct();
-				this.currentSound = null;
-			}			
+			this.stopSong();
 		}
 		
 		this.playlistStore.remove(selectedModels);
 	},
 
 	onClearButton: function() {
-		if (this.currentSound) {
-			this.currentSound.stop();
-			this.currentSound.destruct();
-			this.currentSound = null;
-		}
-		
+		this.stopSong();		
 		this.playlistStore.removeAll();
 	},
 
@@ -153,7 +151,6 @@ Ext.define('MusicSearch.PlaylistController', {
 			this.getProgressText().setText(currentTimeFmt + ' / ' + durationFmt);
 		}
 	},
-
 	
 //	onProgressSliderChangeComplete: function(slider, newValue) {
 //		if (this.currentSound) {
@@ -193,11 +190,10 @@ Ext.define('MusicSearch.PlaylistController', {
 		}
 	},
 
-	playSong: function(song) {
-
-		if (this.currentSound) {
-			this.currentSound.destruct();
-		}
+	playSong: function(record) {
+		var song = record.data;
+		
+		this.stopSong();
 
 		var me = this;
 		
@@ -212,7 +208,7 @@ Ext.define('MusicSearch.PlaylistController', {
 				me.onSoundManagerStop(me, this);
 			},
 			onfinish: function() {
-				me.onSoundManagerStop(me, this);
+				me.onSoundManagerFinish(me, this);
 			},
 			onplay: function() {
 				me.onSoundManagerPlay(me, this);
@@ -229,17 +225,51 @@ Ext.define('MusicSearch.PlaylistController', {
 		});
 		
 		song.playing = true;
+		this.getView().getSelectionModel().select([record]);
+		this.getView().getView().refresh();	
+	},
+	
+	stopSong: function() {
+		if (this.currentSound) {
+			this.currentSound.stop();
+			this.currentSound.destruct();
+			this.currentSound = null;
+		}		
 	},
 
 	onSoundManagerStop: function(controller, sound) {
 		controller.togglePause(true);
 		controller.getPauseButton().disable();
+		controller.getStopButton().disable();
 		controller.getProgressSlider().disable();
 		controller.setNowPlaying(null);		
 		controller.getProgressSlider().setValue(0);		
+		this.deselectAll();
+	},
+	
+	onSoundManagerFinish: function(controller, sound) {
+		this.onSoundManagerStop(controller, sound);
+		var songIndex = this.playlistStore.findExact('playing', true);
+		
+		var record = this.playlistStore.getAt(songIndex+1);
+		if (record) {
+			this.playSong(record);
+		} else {
+			this.deselectAll();
+		}
+	},
+	
+	deselectAll: function() {
+		var songIndex = this.playlistStore.findExact('playing', true);
+		if (songIndex >= 0) {
+			this.playlistStore.getAt(songIndex).data.playing = false;
+			this.getView().getSelectionModel().deselectAll();
+			this.getView().getView().refresh();
+		}
 	},
 	
 	onSoundManagerPlay: function(controller, sound) {
+		controller.getStopButton().enable();
 		controller.togglePause(false);
 		controller.getProgressSlider().enable();
 	},
@@ -250,7 +280,6 @@ Ext.define('MusicSearch.PlaylistController', {
 	
 	onPlaylistGridPanelViewBeforedrop: function(node, data, overModel,
 			dropPosition, dropFunction, eOpts) {
-		// todo need better implementation for this
 		for ( var i = 0; i < data.records.length; i++) {
 			if (this.playlistStore.indexOfId(data.records[i].getId()) === -1) {
 				this.playlistStore.add(data.records[i]);
