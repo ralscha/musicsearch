@@ -35,16 +35,19 @@
     <div id="followingBallsG_3" class="followingBallsG"></div>
     <div id="followingBallsG_4" class="followingBallsG"></div>
   </div>
-	
+  
+  <script>
+    var app_context_path = '<%= request.getContextPath() %>';
+  </script>
+  	
   <c:if test="${isDevelopment}">  
     <script src="resources/extjs/<spring:eval expression='@environment["extjs.version"]'/>/ext-all-dev.js"></script>
     <script src="deft-debug.js"></script>
     <script src="loader.js"></script>    
     <script src="api.js"></script>    
     <script src="direct.js"></script>
-    <script src="app/Song.js"></script>
-    <script src="app.js"></script>
     <script src="soundmanager2.js"></script>
+    <script src="app.js"></script>    
   </c:if> 
     
   <c:if test="${not isDevelopment}">

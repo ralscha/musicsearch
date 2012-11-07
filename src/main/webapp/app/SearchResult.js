@@ -1,29 +1,26 @@
 Ext.define('MusicSearch.SearchResult', {
 	extend: 'Ext.grid.Panel',
 	inject: 'searchResultStore',
-	title: 'Search Result',
+	controller: 'MusicSearch.SearchResultController',
+	title: 'Search Music',
 
 	searchResultStore: null,
 	multiSelect: true,
-	
+
 	viewConfig: {
-        plugins: {
-            ptype: 'gridviewdragdrop',
-            dragText: 'Drag {0} song{1} to the playlist',
-            dragGroup: 'playlistGroup',
-            enableDrop: false
-        },
-        copy: true
+		plugins: {
+			ptype: 'gridviewdragdrop',
+			dragText: 'Drag {0} song{1} to the playlist',
+			dragGroup: 'playlistGroup',
+			enableDrop: false
+		},
+		copy: true
 	},
-	
+
 	initComponent: function() {
 		var me = this;
 
 		me.store = me.searchResultStore;
-
-		me.defaults = {
-			hideable: false
-		};
 
 		me.columns = {
 			defaults: {
@@ -64,6 +61,22 @@ Ext.define('MusicSearch.SearchResult', {
 				format: '0'
 			} ]
 		};
+
+		me.dockedItems = [ {
+			xtype: 'toolbar',
+			dock: 'top',
+			items: [ {
+				xtype: 'filterfield',
+				itemId: 'searchTextField',
+				padding: 3,
+				fieldLabel: 'Search'
+			}, {
+				xtype: 'displayfield',
+				itemId: 'searchInfoDisplayField',
+				padding: '3 3 3 10',
+				value: 'Please enter a search term'
+			} ]
+		} ]
 
 		me.callParent(arguments);
 	}

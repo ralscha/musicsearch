@@ -2,21 +2,24 @@ package ch.rasc.musicsearch.web;
 
 import java.io.IOException;
 
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import ch.ralscha.extdirectspring.generator.ModelGenerator;
 import ch.ralscha.extdirectspring.generator.OutputFormat;
 import ch.rasc.musicsearch.model.Song;
 
-@Controller
-public class ModelController {
+@WebServlet(urlPatterns = "/app/Song.js")
+public class SongModelServlet extends HttpServlet {
 
-	@RequestMapping("/app/Song.js")
-	public void user(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	private static final long serialVersionUID = 1L;
+
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+			IOException {
 		ModelGenerator.writeModel(request, response, Song.class, OutputFormat.EXTJS4);
 	}
 

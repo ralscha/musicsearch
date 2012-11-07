@@ -1,5 +1,6 @@
 Ext.define('MusicSearch.Playlist', {
 	extend: 'Ext.grid.Panel',
+	controller: 'MusicSearch.PlaylistController',
 	inject: 'playlistStore',
 	title: 'Now playing:',
 	multiSelect: true,
@@ -67,37 +68,44 @@ Ext.define('MusicSearch.Playlist', {
 			items: [ {
 				xtype: 'button',
 				text: 'Play',
+				disabled: true,
 				icon: '../resources/images/media_play.png',
 				itemId: 'playButton'
 			}, {
 				xtype: 'button',
 				text: 'Pause',
+				disabled: true,
 				icon: '../resources/images/media_pause.png',
 				enableToggle: true,
 				itemId: 'pauseButton'
 			}, {
 				xtype: 'button',
 				text: 'Prev',
+				disabled: true,
 				icon: '../resources/images/media_step_back.png',
 				itemId: 'prevButton'
 			}, {
 				xtype: 'button',
 				text: 'Next',
+				disabled: true,
 				icon: '../resources/images/media_step_forward.png',
 				itemId: 'nextButton'
 			}, {
 				xtype: 'button',
 				text: 'Remove from playlist',
+				disabled: true,
 				icon: '../resources/images/navigate_minus.png',
 				itemId: 'removeButton'
 			}, {
 				xtype: 'button',
 				text: 'Clear playlist',
+				disabled: true,
 				icon: '../resources/images/eraser.png',
 				itemId: 'clearButton'
 			}, '-', {
 				xtype: 'slider',
 				itemId: 'progressSlider',
+				disabled: true,
 				decimalPrecision: 1,
 				width: 250,
 				useTips: false
