@@ -260,7 +260,7 @@ Ext.define('MusicSearch.PlaylistController', {
 		
 		this.currentSound = soundManager.createSound({
 			id: 'currentSound',
-			url: app_context_path + 'downloadMusic?docId=' + song.id,
+			url: app_context_path + '/downloadMusic?docId=' + song.id,
 			type: song.encoding,		
 			autoLoad: true,
 			autoPlay: true,

@@ -8,9 +8,9 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta charset="utf-8">
-  <link rel="icon" type="image/png" href="<c:url value="favicon16.png"/>" sizes="16x16"/>
-  <link rel="icon" type="image/png" href="<c:url value="favicon32.png"/>" sizes="32x32" />
-  <link rel="icon" type="image/png" href="<c:url value="favicon48.png"/>" sizes="48x48" />
+  <link rel="icon" type="image/png" href="<c:url value="/favicon16.png"/>" sizes="16x16"/>
+  <link rel="icon" type="image/png" href="<c:url value="/favicon32.png"/>" sizes="32x32" />
+  <link rel="icon" type="image/png" href="<c:url value="/favicon48.png"/>" sizes="48x48" />
   
  
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">	
@@ -42,9 +42,6 @@
   
   <script>
     var app_context_path = '<%= request.getContextPath() %>';
-    if (!/\/$/.test(app_context_path)) {
-      app_context_path += '/';
-    }
   </script>
   	
   <c:if test="${isDevelopment}">  

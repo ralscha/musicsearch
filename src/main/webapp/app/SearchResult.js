@@ -79,13 +79,13 @@ Ext.define('MusicSearch.SearchResult', {
 				text: 'Add Selected to Playlist',
 				disabled: true,
 				itemId: 'addSelectedButton',
-				icon: app_context_path + 'resources/images/navigate_plus.png',
+				icon: app_context_path + '/resources/images/navigate_plus.png',
 			}, {
 				xtype: 'button',
 				text: 'Download Selected',
-				icon: app_context_path + 'resources/images/download.png',
+				icon: app_context_path + '/resources/images/download.png',
 				disabled: true,
-				href: app_context_path + 'downloadMusicZip',
+				href: app_context_path + '/downloadMusicZip',
 				hrefTarget: '_self',
 				itemId: 'downloadSelectedButton'
 			} ]
