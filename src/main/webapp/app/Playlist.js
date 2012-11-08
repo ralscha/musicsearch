@@ -14,10 +14,9 @@ Ext.define('MusicSearch.Playlist', {
 		},		
 		plugins: {
 			ptype: 'gridviewdragdrop',
-			dropGroup: 'playlistGroup',
-			enableDrag: false
-		},
-		copy: true
+			ddGroup: 'playlistGroup',
+			dragText: 'Drag and drop to reorganize'
+		}
 	},
 
 	initComponent: function() {

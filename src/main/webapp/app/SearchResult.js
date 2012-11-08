@@ -11,7 +11,7 @@ Ext.define('MusicSearch.SearchResult', {
 		plugins: {
 			ptype: 'gridviewdragdrop',
 			dragText: 'Drag {0} song{1} to the playlist',
-			dragGroup: 'playlistGroup',
+			ddGroup: 'playlistGroup',
 			enableDrop: false
 		},
 		copy: true
@@ -76,6 +76,12 @@ Ext.define('MusicSearch.SearchResult', {
 				padding: '3 3 3 10',
 				value: 'Please enter a search term'
 			}, '->', {
+				xtype: 'button',
+				text: 'Add Selected to Playlist',
+				disabled: true,
+				itemId: 'addSelectedButton',
+				icon: app_context_path + 'resources/images/navigate_plus.png',
+			}, {
 				xtype: 'button',
 				text: 'Download Selected',
 				icon: app_context_path + 'resources/images/download.png',

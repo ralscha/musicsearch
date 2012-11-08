@@ -344,9 +344,25 @@ Ext.define('MusicSearch.PlaylistController', {
 	
 	onPlaylistGridPanelViewBeforedrop: function(node, data, overModel,
 			dropPosition, dropFunction, eOpts) {
+		
+		if (!data.copy) {
+			return true;
+		}
+		
+		var index;
+		var record = this.getView().getView().getRecord(node);
+		if (record == undefined) {
+			index = this.playlistStore.getCount();
+		} else {
+			index = this.playlistStore.indexOf(record);
+			if (dropPosition == 'after') {
+				index++;
+			}
+		}		
+		
 		for (var i = 0; i < data.records.length; i++) {
 			if (this.playlistStore.indexOf(data.records[i]) === -1) {
-				this.playlistStore.add(data.records[i]);
+				this.playlistStore.insert(index++, data.records[i]);
 			}
 		}
 		return false;
