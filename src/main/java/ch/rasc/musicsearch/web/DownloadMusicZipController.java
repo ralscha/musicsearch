@@ -2,9 +2,8 @@ package ch.rasc.musicsearch.web;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,8 +46,8 @@ public class DownloadMusicZipController {
 			Path tempFile = Files.createTempFile("mp3", "zip");
 			tempFile.toFile().deleteOnExit();
 
-			try (FileOutputStream fos = new FileOutputStream(tempFile.toFile());
-					BufferedOutputStream bos = new BufferedOutputStream(fos);
+			try (OutputStream os = Files.newOutputStream(tempFile);
+					BufferedOutputStream bos = new BufferedOutputStream(os);
 					ZipOutputStream zip = new ZipOutputStream(bos)) {
 				zip.setMethod(ZipOutputStream.DEFLATED);
 				zip.setLevel(Deflater.NO_COMPRESSION);
@@ -60,11 +59,11 @@ public class DownloadMusicZipController {
 
 						Path musicFile = Paths.get(environement.getProperty("musicDir"), doc.get("directory"),
 								doc.get("fileName"));
-						try (FileInputStream fis = new FileInputStream(musicFile.toFile())) {
+						try (InputStream is = Files.newInputStream(musicFile)) {
 							ZipEntry entry = new ZipEntry(musicFile.getFileName().toString());
 							entry.setTime(DateTime.now().getMillis());
 							zip.putNextEntry(entry);
-							zip.write(ByteStreams.toByteArray(fis));
+							zip.write(ByteStreams.toByteArray(is));
 							zip.closeEntry();
 						}
 					}
@@ -73,8 +72,8 @@ public class DownloadMusicZipController {
 
 			response.setContentLength((int) Files.size(tempFile));
 
-			try (FileInputStream fis = new FileInputStream(tempFile.toFile());
-					BufferedInputStream bis = new BufferedInputStream(fis);
+			try (InputStream is = Files.newInputStream(tempFile);
+					BufferedInputStream bis = new BufferedInputStream(is);
 					OutputStream out = response.getOutputStream();) {
 
 				ByteStreams.copy(bis, out);

@@ -1,8 +1,8 @@
 package ch.rasc.musicsearch.web;
 
 import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -42,8 +42,8 @@ public class DownloadMusicController {
 
 			response.setContentLength((int) Files.size(musicFile));
 
-			try (FileInputStream fis = new FileInputStream(musicFile.toFile());
-					BufferedInputStream bis = new BufferedInputStream(fis);
+			try (InputStream is = Files.newInputStream(musicFile);
+					BufferedInputStream bis = new BufferedInputStream(is);
 					OutputStream out = response.getOutputStream();) {
 
 				ByteStreams.copy(bis, out);
