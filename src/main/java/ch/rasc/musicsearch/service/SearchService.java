@@ -120,7 +120,6 @@ public class SearchService {
 				Song song = new Song();
 				song.setId(scoreDoc.doc);
 
-				song.setFileName(doc.get("directory") + "/" + doc.get("fileName"));
 				song.setTitle(doc.get("title"));
 				song.setArtist(doc.get("artist"));
 				song.setAlbum(doc.get("album"));
@@ -130,7 +129,7 @@ public class SearchService {
 
 				if (StringUtils.isBlank(song.getArtist()) && StringUtils.isBlank(song.getAlbum())
 						&& StringUtils.isBlank(song.getTitle())) {
-					song.setTitle(song.getFileName());
+					song.setTitle(doc.get("fileName"));
 				}
 
 				IndexableField field = doc.getField("duration");

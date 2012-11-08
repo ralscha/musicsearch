@@ -19,8 +19,6 @@ public class Song {
 
 	private Long bitrate;
 
-	private String fileName;
-
 	private String encoding;
 
 	public String getTitle() {
@@ -69,14 +67,6 @@ public class Song {
 
 	public void setBitrate(Long bitrate) {
 		this.bitrate = bitrate;
-	}
-
-	public String getFileName() {
-		return fileName;
-	}
-
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
 	}
 
 	public String getEncoding() {
