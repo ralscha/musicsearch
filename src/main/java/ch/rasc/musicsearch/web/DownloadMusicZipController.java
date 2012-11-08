@@ -72,11 +72,8 @@ public class DownloadMusicZipController {
 
 			response.setContentLength((int) Files.size(tempFile));
 
-			try (InputStream is = Files.newInputStream(tempFile);
-					BufferedInputStream bis = new BufferedInputStream(is);
-					OutputStream out = response.getOutputStream();) {
-
-				ByteStreams.copy(bis, out);
+			try (OutputStream out = response.getOutputStream()) {
+				Files.copy(tempFile, out);
 			}
 		}
 	}

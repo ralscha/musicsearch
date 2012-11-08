@@ -42,12 +42,8 @@ public class DownloadMusicController {
 
 			response.setContentLength((int) Files.size(musicFile));
 
-			try (InputStream is = Files.newInputStream(musicFile);
-					BufferedInputStream bis = new BufferedInputStream(is);
-					OutputStream out = response.getOutputStream();) {
-
-				ByteStreams.copy(bis, out);
-
+			try (OutputStream out = response.getOutputStream()) {
+				Files.copy(musicFile, out);
 			}
 		}
 
