@@ -2,9 +2,6 @@ Ext.define('MusicSearch.SearchResultController', {
 	extend: 'Deft.mvc.ViewController',
 	inject: [ 'searchResultStore', 'playlistStore' ],
 
-	searchResultStore: null,
-	playlistStore: null,
-
 	observe: {
 		searchResultStore: {
 			load: 'onSearchResultStoreLoad'
@@ -110,14 +107,20 @@ Ext.define('MusicSearch.SearchResultController', {
 
 	onAddSelectedButtonClick: function() {
 		if (this.getView().getSelectionModel().hasSelection()) {
+			
+			var insertRecords = [];
 			Ext.Array.forEach(
 					this.getView().getSelectionModel().getSelection(),
 					function(record) {
 						if (this.playlistStore.indexOf(record) === -1) {
-							this.playlistStore.add(record);
+							insertRecords.push(record);
 						}
 					}, this);
+			
+			
+			this.playlistStore.add(insertRecords);
 			this.getAddSelectedButton().disable();
+			this.getView().getSelectionModel().deselectAll();
 		}
 	}
 

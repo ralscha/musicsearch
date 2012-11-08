@@ -2,7 +2,6 @@ Ext.define('MusicSearch.PlaylistController', {
 	extend: 'Deft.mvc.ViewController',
 	inject: 'playlistStore',
 
-	playlistStore: null,
 	currentSound: null,
 
 	observe: {
@@ -360,11 +359,13 @@ Ext.define('MusicSearch.PlaylistController', {
 			}
 		}		
 		
+		var insertRecords = [];
 		for (var i = 0; i < data.records.length; i++) {
 			if (this.playlistStore.indexOf(data.records[i]) === -1) {
-				this.playlistStore.insert(index++, data.records[i]);
+				insertRecords.push(data.records[i]);				
 			}
 		}
+		this.playlistStore.insert(index, insertRecords);
 		return false;
 	}
 

@@ -4,7 +4,6 @@ Ext.define('MusicSearch.SearchResult', {
 	controller: 'MusicSearch.SearchResultController',
 	title: 'Search Music',
 
-	searchResultStore: null,
 	multiSelect: true,
 
 	viewConfig: {

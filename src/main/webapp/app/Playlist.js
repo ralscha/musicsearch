@@ -6,8 +6,6 @@ Ext.define('MusicSearch.Playlist', {
 	multiSelect: true,
 	sortableColumns: false,
 
-	playlistStore: null,
-
 	viewConfig: {
 		getRowClass: function(rec, idx, rowPrms, ds) {
 			return rec.data.playing ? 'playlist-playing-row' : '';
