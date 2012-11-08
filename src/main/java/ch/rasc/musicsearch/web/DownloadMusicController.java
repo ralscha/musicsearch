@@ -1,8 +1,6 @@
 package ch.rasc.musicsearch.web;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ch.rasc.musicsearch.service.IndexService;
-
-import com.google.common.io.ByteStreams;
 
 @Controller
 public class DownloadMusicController {
