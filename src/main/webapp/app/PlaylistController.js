@@ -45,9 +45,8 @@ Ext.define('MusicSearch.PlaylistController', {
 		},
 
 		progressSlider: {
-			change: 'onProgressSliderChange'
-			//position change does not work properly	
-			//changecomplete: 'onProgressSliderChangeComplete'
+			change: 'onProgressSliderChange',	
+			changecomplete: 'onProgressSliderChangeComplete'
 		},
 		volumeSlider: {
 			change: 'onVolumeSliderChange'
@@ -192,11 +191,11 @@ Ext.define('MusicSearch.PlaylistController', {
 		}
 	},
 	
-//	onProgressSliderChangeComplete: function(slider, newValue) {
-//		if (this.currentSound) {
-//			this.currentSound.setPosition((newValue / 100) * this.currentSound.duration);
-//		}
-//	},
+	onProgressSliderChangeComplete: function(slider, newValue) {
+		if (this.currentSound) {
+			this.currentSound.setPosition((newValue / 100) * this.currentSound.duration);
+		}
+	},
 
 	togglePause: function(state) {
 		this.getPauseButton().enable();
@@ -310,16 +309,14 @@ Ext.define('MusicSearch.PlaylistController', {
 		this.deselectAll();
 	},
 	
-	onSoundManagerFinish: function(controller, sound) {
-		this.onSoundManagerStop(controller, sound);
+	onSoundManagerFinish: function(controller, sound) {		
 		var songIndex = this.playlistStore.findExact('playing', true);
+		this.onSoundManagerStop(controller, sound);
 		
 		var record = this.playlistStore.getAt(songIndex+1);
 		if (record) {
 			this.playSong(record);
-		} else {
-			this.deselectAll();
-		}
+		} 
 	},
 	
 	deselectAll: function() {
