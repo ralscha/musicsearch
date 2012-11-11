@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.lucene.document.Document;
@@ -26,6 +27,18 @@ public class DownloadMusicController {
 	@Autowired
 	private IndexService indexService;
 
+	private boolean xSendFile;
+
+	@PostConstruct
+	public void init() {
+		Boolean xSendFileProperty = environement.getProperty("xSendFile", Boolean.class);
+		if (xSendFileProperty != null) {
+			xSendFile = xSendFileProperty;
+		} else {
+			xSendFile = false;
+		}
+	}
+
 	@RequestMapping("/downloadMusic")
 	public void download(@RequestParam(value = "docId", required = true) int docId, HttpServletResponse response)
 			throws IOException {
@@ -36,10 +49,16 @@ public class DownloadMusicController {
 
 			Path musicFile = Paths.get(environement.getProperty("musicDir"), doc.get("directory"), doc.get("fileName"));
 
-			response.setContentLength((int) Files.size(musicFile));
+			String contentType = Files.probeContentType(musicFile);
+			response.setContentType(contentType);
 
-			try (OutputStream out = response.getOutputStream()) {
-				Files.copy(musicFile, out);
+			if (xSendFile) {
+				response.setHeader("X-SendFile", musicFile.toAbsolutePath().toString());
+			} else {
+				response.setContentLength((int) Files.size(musicFile));
+				try (OutputStream out = response.getOutputStream()) {
+					Files.copy(musicFile, out);
+				}
 			}
 		}
 

@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -27,8 +26,6 @@ import org.apache.lucene.util.Version;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-
-import com.google.common.base.Stopwatch;
 
 @Service
 public class IndexService {
@@ -90,9 +87,6 @@ public class IndexService {
 			// iwc.setOpenMode(OpenMode.CREATE);
 			iwc.setOpenMode(OpenMode.CREATE_OR_APPEND);
 
-			Stopwatch stopwatch = new Stopwatch();
-			stopwatch.start();
-
 			IndexFileWalker walker = null;
 
 			try (IndexWriter writer = new IndexWriter(dir, iwc)) {
@@ -101,9 +95,6 @@ public class IndexService {
 
 				writer.forceMerge(1);
 			}
-
-			stopwatch.stop();
-			logger.info("INDEXING TIME: " + stopwatch.elapsedTime(TimeUnit.SECONDS));
 
 			Path infoFile = ixDir.resolve("info.properties");
 			try (FileWriter fw = new FileWriter(infoFile.toFile())) {

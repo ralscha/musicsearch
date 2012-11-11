@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
@@ -33,8 +34,6 @@ import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
 import ch.ralscha.extdirectspring.filter.StringFilter;
 import ch.rasc.musicsearch.model.Info;
 import ch.rasc.musicsearch.model.Song;
-
-import com.google.common.collect.Lists;
 
 @Service
 public class SearchService {
@@ -90,9 +89,7 @@ public class SearchService {
 			filterValue = filter.getValue();
 		}
 
-		logger.info("SEARCH FOR: " + filterValue);
-
-		List<Song> resultList = Lists.newArrayList();
+		List<Song> resultList = new ArrayList<>();
 
 		try (Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_40)) {
 
@@ -113,7 +110,6 @@ public class SearchService {
 			}
 
 			TopDocs results = indexService.getIndexSearcher().search(query, 10000);
-			logger.info("FOUND:      " + results.totalHits);
 			for (ScoreDoc scoreDoc : results.scoreDocs) {
 				Document doc = indexService.getIndexSearcher().doc(scoreDoc.doc);
 
@@ -151,7 +147,7 @@ public class SearchService {
 			}
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("search service", e);
 		}
 
 		return resultList;

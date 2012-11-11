@@ -23,8 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ch.rasc.musicsearch.service.IndexService;
 
-import com.google.common.base.Splitter;
-
 @Controller
 public class DownloadMusicZipController {
 
@@ -48,7 +46,7 @@ public class DownloadMusicZipController {
 				zip.setMethod(ZipOutputStream.DEFLATED);
 				zip.setLevel(Deflater.NO_COMPRESSION);
 
-				for (String id : Splitter.on(",").split(selectedMusicIds)) {
+				for (String id : selectedMusicIds.split(",")) {
 					Document doc = indexService.getIndexSearcher().doc(Integer.valueOf(id));
 
 					if (doc != null) {
@@ -69,7 +67,7 @@ public class DownloadMusicZipController {
 			try (OutputStream out = response.getOutputStream()) {
 				Files.copy(tempFile, out);
 			}
-			
+
 			Files.delete(tempFile);
 		}
 	}
