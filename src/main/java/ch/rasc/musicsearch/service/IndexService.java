@@ -30,8 +30,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class IndexService {
 
-	private static final Log logger = LogFactory.getLog(IndexService.class);
-
 	private Directory indexDirectory;
 
 	private IndexReader indexReader;
