@@ -11,7 +11,7 @@
 	</prerequisites>
 
 	<properties>
-		<spring.version>3.2.0.M2</spring.version>
+		<spring.version>3.2.0.RC1</spring.version>
 
 		<slf4j.version>1.7.2</slf4j.version>
 		<logback.version>1.0.7</logback.version>
@@ -23,7 +23,7 @@
 
 		<maven.build.timestamp.format>yyyy-MM-dd'T'hh:mm:ss.SSSZ</maven.build.timestamp.format>
 		<build.timestamp>${maven.build.timestamp}</build.timestamp>
-		<extjs.version>4.1.2</extjs.version>
+		<extjs.version>4.1.3</extjs.version>
 	</properties>
 
 
