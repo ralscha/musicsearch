@@ -89,7 +89,7 @@ Ext.define('MusicSearch.SearchResult', {
 				hrefTarget: '_self',
 				itemId: 'downloadSelectedButton'
 			} ]
-		} ]
+		} ];
 
 		me.callParent(arguments);
 	}
