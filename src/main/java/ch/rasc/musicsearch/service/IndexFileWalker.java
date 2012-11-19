@@ -136,7 +136,7 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 
 			writer.addDocument(doc);
 
-		} catch (CannotReadException | TagException | ReadOnlyFileException | InvalidAudioFrameException e) {
+		} catch (IOException | CannotReadException | TagException | ReadOnlyFileException | InvalidAudioFrameException e) {
 			System.out.println(e.getMessage());
 		}
 
