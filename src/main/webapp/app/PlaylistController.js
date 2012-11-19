@@ -280,8 +280,8 @@ Ext.define('MusicSearch.PlaylistController', {
 		
 		this.setNowPlaying(song);
 		
-		this.playlistStore.each(function(record) { 
-			record.data.playing = false; 
+		this.playlistStore.each(function(rec) { 
+			rec.data.playing = false; 
 		});
 		
 		song.playing = true;
