@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.document.Document;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -54,7 +53,7 @@ public class DownloadMusicZipController {
 						Path musicFile = Paths.get(environement.getProperty("musicDir"), doc.get("directory"),
 								doc.get("fileName"));
 						ZipEntry entry = new ZipEntry(musicFile.getFileName().toString());
-						entry.setTime(DateTime.now().getMillis());
+						entry.setTime(System.currentTimeMillis());
 						zip.putNextEntry(entry);
 						zip.write(Files.readAllBytes(musicFile));
 						zip.closeEntry();

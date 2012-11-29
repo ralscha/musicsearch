@@ -29,11 +29,6 @@ public class SpringConfig extends WebMvcConfigurerAdapter {
 		configurer.enable();
 	}
 
-	@Bean
-	public MultipartResolver multipartResolver() {
-		return new CommonsMultipartResolver();
-	}
-
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
 		registry.addViewController("/").setViewName("index");

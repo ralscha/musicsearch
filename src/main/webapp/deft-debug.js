@@ -172,7 +172,17 @@ Ext.define('Deft.util.Function', {
           memo[key] = fn.apply(scope, arguments);
         }
         return memo[key];
+        /**
+        		* Retrieves the value for the specified object key and removes the pair from the object.
+        */
+
       };
+    },
+    extract: function(object, key) {
+      var value;
+      value = object[key];
+      delete object[key];
+      return value;
     }
   }
 });
@@ -504,7 +514,107 @@ Open source under the [MIT License](http://en.wikipedia.org/wiki/MIT_License).
 */
 
 /**
-* A lightweight IoC container for dependency injection.
+A lightweight IoC container for dependency injection.
+
+## <u>[Basic Configuration](https://github.com/deftjs/DeftJS/wiki/Basic-Application-and-IoC-Configuration)</u>
+
+    // Common configuration, using dependency provider name and class.
+    Deft.Injector.configure({
+      companyStore: "DeftQuickStart.store.CompanyStore",
+      companyService: "DeftQuickStart.store.CompanyService"
+    });
+
+In the IoC configuration above, we have created two **dependency providers**, one named `companyStore` and one named `companyService`. By default, DeftJS uses lazy instantiation to create singleton instances of the `CompanyStore` and `CompanyService` classes. This means that a singleton won't be created until an object in your application specifies one of these dependency providers as an injected dependency.
+
+## <u>[Singleton vs. Prototype Dependency Providers](https://github.com/deftjs/DeftJS/wiki/Singleton-vs.-Prototype-Dependency-Providers)</u>
+
+By default, the dependency providers set up with the DeftJS `Injector` are singletons. This means that only one instance of that dependency will be created, and the same instance will be injected into all objects that request that dependency.
+
+For cases where this is not desired, you can create non-singleton (prototype) dependency providers like this:
+
+    Deft.Injector.configure({
+      editHistory: {
+        className: "MyApp.util.EditHistory",
+        singleton: false
+      }
+    });
+
+## <u>[Lazy vs. Eager Dependency Creation](https://github.com/deftjs/DeftJS/wiki/Eager-vs.-Lazy-Instantiation)</u>
+
+By default, dependency providers are created **lazily**. This means that the dependency will not be created by DeftJS until another object is created which specifies that dependency as an injection.
+
+In cases where lazy instantiation is not desired, you can set up a dependency provider to be created immediately upon application startup by using the `eager` configuration:
+
+    Deft.Injector.configure({
+      notificationService: {
+        className: "MyApp.service.NotificationService",
+        eager: true
+      }
+    });
+
+> **NOTE: Only singleton dependency providers can be eagerly instantiated.** This means that specifying `singleton: false` and `eager: true` for a dependency provider won't work. The reason may be obvious: DeftJS can't do anything with a prototype object that is eagerly created, since by definition each injection of a prototype dependency must be a new instance!
+
+## <u>[Constructor Parameters](https://github.com/deftjs/DeftJS/wiki/Constructor-Parameters)</u>
+
+If needed, constructor parameters can be specified for a dependency provider. These parameters will be passed into the constructor of the target object when it is created. Constructor parameters can be configured in the following way:
+
+    Deft.Injector.configure({
+      contactStore: {
+        className: 'MyApp.store.ContactStore',
+
+        // Specify an array of params to pass into ContactStore constructor
+        parameters: [{
+          proxy: {
+            type: 'ajax',
+            url: '/contacts.json',
+            reader: {
+              type: 'json',
+              root: 'contacts'
+            }
+          }
+        }]
+      }
+    });
+
+## <u>[Constructor Parameters](https://github.com/deftjs/DeftJS/wiki/Factory-Functions)</u>
+
+A dependency provider can also specify a function to use to create the object that will be injected:
+
+    Deft.Injector.configure({
+
+      contactStore: {
+        fn: function() {
+          if (useMocks) {
+            return Ext.create("MyApp.mock.store.ContactStore");
+          } else {
+            return Ext.create("MyApp.store.ContactStore");
+          }
+        },
+        eager: true
+      },
+
+      contactManager: {
+        // The factory function will be passed a single argument:
+        // The object instance that the new object will be injected into
+        fn: function(instance) {
+          if (instance.session.getIsAdmin()) {
+            return Ext.create("MyApp.manager.admin.ContactManager");
+          } else {
+            return Ext.create("MyApp.manager.user.ContactManager");
+          }
+        },
+        singleton: false
+      }
+
+    });
+
+When the Injector is called to resolve dependencies for these identifiers, the factory function is called and the dependency is resolved with the return value.
+
+As shown above, a lazily instantiated factory function can optionally accept a parameter, corresponding to the instance for which the Injector is currently injecting dependencies.
+
+Factory function dependency providers can be configured as singletons or prototypes and can be eagerly or lazily instantiated.
+
+> **NOTE: Only singleton factory functions can be eagerly instantiated.** This means that specifying `singleton: false` and `eager: true` for a dependency provider won't work. The reason may be obvious: DeftJS can't do anything with a prototype object that is eagerly created, since by definition each injection of a prototype dependency must be a new instance!
 */
 
 Ext.define('Deft.ioc.Injector', {
@@ -729,11 +839,12 @@ Open source under the [MIT License](http://en.wikipedia.org/wiki/MIT_License).
 */
 
 /**
+* @private
 * Used by Deft.mvc.ViewController to handle events fired from injected objects.
 */
 
 Ext.define('Deft.mvc.Observer', {
-  requires: ['Deft.core.Class', 'Ext.util.Observable'],
+  requires: ['Deft.core.Class', 'Ext.util.Observable', 'Deft.util.Function'],
   statics: {
     /**
     		* Merges child and parent observers into a single object. This differs from a normal object merge because
@@ -744,7 +855,7 @@ Ext.define('Deft.mvc.Observer', {
     */
 
     mergeObserve: function(originalParentObserve, originalChildObserve) {
-      var childEvent, childEvents, childHandler, childHandlerArray, childObserve, childTarget, handlerConfig, newChildEvents, newParentEvents, parentEvent, parentEvents, parentHandler, parentHandlerArray, parentObserve, parentTarget, thisChildEvent, thisParentEvent, _i, _j, _len, _len1, _ref, _ref1;
+      var childEvent, childEvents, childHandler, childHandlerArray, childObserve, childTarget, eventOptionNames, handlerConfig, newChildEvents, newParentEvents, parentEvent, parentEvents, parentHandler, parentHandlerArray, parentObserve, parentTarget, thisChildEvent, thisEventOptionName, thisParentEvent, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1;
       if (!Ext.isObject(originalParentObserve)) {
         parentObserve = {};
       } else {
@@ -755,6 +866,7 @@ Ext.define('Deft.mvc.Observer', {
       } else {
         childObserve = Ext.clone(originalChildObserve);
       }
+      eventOptionNames = ["buffer", "single", "delay", "element", "target", "destroyable"];
       for (parentTarget in parentObserve) {
         parentEvents = parentObserve[parentTarget];
         if (Ext.isArray(parentEvents)) {
@@ -765,11 +877,17 @@ Ext.define('Deft.mvc.Observer', {
               Ext.apply(newParentEvents, thisParentEvent);
             } else {
               handlerConfig = {};
-              if (thisParentEvent != null ? thisParentEvent.fn : void 0) {
+              if ((thisParentEvent != null ? thisParentEvent.fn : void 0) != null) {
                 handlerConfig.fn = thisParentEvent.fn;
               }
-              if (thisParentEvent != null ? thisParentEvent.scope : void 0) {
+              if ((thisParentEvent != null ? thisParentEvent.scope : void 0) != null) {
                 handlerConfig.scope = thisParentEvent.scope;
+              }
+              for (_j = 0, _len1 = eventOptionNames.length; _j < _len1; _j++) {
+                thisEventOptionName = eventOptionNames[_j];
+                if ((thisParentEvent != null ? thisParentEvent[thisEventOptionName] : void 0) != null) {
+                  handlerConfig[thisEventOptionName] = thisParentEvent[thisEventOptionName];
+                }
               }
               newParentEvents[thisParentEvent.event] = [handlerConfig];
             }
@@ -781,17 +899,23 @@ Ext.define('Deft.mvc.Observer', {
         childEvents = childObserve[childTarget];
         if (Ext.isArray(childEvents)) {
           newChildEvents = {};
-          for (_j = 0, _len1 = childEvents.length; _j < _len1; _j++) {
-            thisChildEvent = childEvents[_j];
+          for (_k = 0, _len2 = childEvents.length; _k < _len2; _k++) {
+            thisChildEvent = childEvents[_k];
             if (Ext.Object.getSize(thisChildEvent) === 1) {
               Ext.apply(newChildEvents, thisChildEvent);
             } else {
               handlerConfig = {};
-              if (thisChildEvent != null ? thisChildEvent.fn : void 0) {
+              if ((thisChildEvent != null ? thisChildEvent.fn : void 0) != null) {
                 handlerConfig.fn = thisChildEvent.fn;
               }
-              if (thisChildEvent != null ? thisChildEvent.scope : void 0) {
+              if ((thisChildEvent != null ? thisChildEvent.scope : void 0) != null) {
                 handlerConfig.scope = thisChildEvent.scope;
+              }
+              for (_l = 0, _len3 = eventOptionNames.length; _l < _len3; _l++) {
+                thisEventOptionName = eventOptionNames[_l];
+                if ((thisChildEvent != null ? thisChildEvent[thisEventOptionName] : void 0) != null) {
+                  handlerConfig[thisEventOptionName] = thisChildEvent[thisEventOptionName];
+                }
               }
               newChildEvents[thisChildEvent.event] = [handlerConfig];
             }
@@ -837,7 +961,7 @@ Ext.define('Deft.mvc.Observer', {
   */
 
   constructor: function(config) {
-    var eventName, events, handler, handlerArray, host, references, scope, target, _i, _len;
+    var eventName, events, handler, handlerArray, host, options, references, scope, target, _i, _len;
     this.listeners = [];
     host = config != null ? config.host : void 0;
     target = config != null ? config.target : void 0;
@@ -851,20 +975,22 @@ Ext.define('Deft.mvc.Observer', {
         for (_i = 0, _len = handlerArray.length; _i < _len; _i++) {
           handler = handlerArray[_i];
           scope = host;
+          options = null;
           if (Ext.isObject(handler)) {
-            if (handler != null ? handler.event : void 0) {
-              eventName = handler.event;
+            options = Ext.clone(handler);
+            if (options != null ? options.event : void 0) {
+              eventName = Deft.util.Function.extract(options, "event");
             }
-            if (handler != null ? handler.fn : void 0) {
-              handler = handler.fn;
+            if (options != null ? options.fn : void 0) {
+              handler = Deft.util.Function.extract(options, "fn");
             }
-            if (handler != null ? handler.scope : void 0) {
-              scope = handler.scope;
+            if (options != null ? options.scope : void 0) {
+              scope = Deft.util.Function.extract(options, "scope");
             }
           }
           references = this.locateReferences(host, target, handler);
           if (references) {
-            references.target.on(eventName, references.handler, host);
+            references.target.on(eventName, references.handler, scope, options);
             this.listeners.push({
               targetName: target,
               target: references.target,
@@ -1040,6 +1166,7 @@ Open source under the [MIT License](http://en.wikipedia.org/wiki/MIT_License).
 */
 
 /**
+* @private
 * Models a component selector used by Deft.mvc.ViewController to locate view components and attach event listeners.
 */
 
@@ -1144,13 +1271,116 @@ Open source under the [MIT License](http://en.wikipedia.org/wiki/MIT_License).
 */
 
 /**
-* A lightweight MVC view controller.
-*
-*     Ext.define("MyApp.view.MyTabPanel", {
-*       extend: "Ext.tab.Panel",
-*       controller: 'MyApp.controller.MyTabPanelController',
-*       ...
-*     });
+A lightweight MVC view controller. Full usage instructions in the [DeftJS documentation](https://github.com/deftjs/DeftJS/wiki/ViewController).
+
+First, specify a ViewController to attach to a view:
+
+    Ext.define("DeftQuickStart.view.MyTabPanel", {
+      extend: "Ext.tab.Panel",
+      controller: "DeftQuickStart.controller.MainController",
+      ...
+    });
+
+Next, define the ViewController:
+
+    Ext.define("DeftQuickStart.controller.MainController", {
+      extend: "Deft.mvc.ViewController",
+
+      init: function() {
+        return this.callParent(arguments);
+      }
+
+    });
+
+## Inject dependencies using the <u>[`inject` property](https://github.com/deftjs/DeftJS/wiki/Injecting-Dependencies)</u>:
+
+    Ext.define("DeftQuickStart.controller.MainController", {
+      extend: "Deft.mvc.ViewController",
+      inject: ["companyStore"],
+
+      config: {
+        companyStore: null
+      },
+
+      init: function() {
+        return this.callParent(arguments);
+      }
+
+    });
+
+## Define <u>[references to view components](https://github.com/deftjs/DeftJS/wiki/Accessing-Views)</u> and <u>[add view listeners](https://github.com/deftjs/DeftJS/wiki/Handling-View-Events)</u> with the `control` property:
+
+    Ext.define("DeftQuickStart.controller.MainController", {
+      extend: "Deft.mvc.ViewController",
+
+      control: {
+
+        // Most common configuration, using an itemId and listener
+        manufacturingFilter: {
+          change: "onFilterChange"
+        },
+
+        // Reference only, with no listeners
+        serviceIndustryFilter: true,
+
+        // Configuration using selector, listeners, and event listener options
+        salesFilter: {
+          selector: "toolbar > checkbox",
+          listeners: {
+            change: {
+              fn: "onFilterChange",
+              buffer: 50,
+              single: true
+            }
+          }
+        }
+      },
+
+      init: function() {
+        return this.callParent(arguments);
+      }
+
+      // Event handlers or other methods here...
+
+    });
+
+## Dynamically monitor view to attach listeners to added components with <u>[live selectors](https://github.com/deftjs/DeftJS/wiki/ViewController-Live-Selectors)</u>:
+
+    control: {
+      manufacturingFilter: {
+        live: true,
+        listeners: {
+          change: "onFilterChange"
+        }
+      }
+    };
+
+## Observe events on injected objects with the <u>[`observe` property](https://github.com/deftjs/DeftJS/wiki/ViewController-Observe-Configuration)</u>:
+
+    Ext.define("DeftQuickStart.controller.MainController", {
+      extend: "Deft.mvc.ViewController",
+      inject: ["companyStore"],
+
+      config: {
+        companyStore: null
+      },
+
+      observe: {
+        // Observe companyStore for the update event
+        companyStore: {
+          update: "onCompanyStoreUpdateEvent"
+        }
+      },
+
+      init: function() {
+        return this.callParent(arguments);
+      },
+
+      onCompanyStoreUpdateEvent: function(store, model, operation, fieldNames) {
+        // Do something when store fires update event
+      }
+
+    });
 */
 
 Ext.define('Deft.mvc.ViewController', {
@@ -1599,7 +1829,7 @@ Ext.define('Deft.mixin.Controllable', {
 Copyright (c) 2012 [DeftJS Framework Contributors](http://deftjs.org)
 Open source under the [MIT License](http://en.wikipedia.org/wiki/MIT_License).
 
-Promise.when(), all(), any(), map() and reduce() methods adapted from:
+Promise.when(), all(), any(), some(), map() and reduce() methods adapted from:
 [when.js](https://github.com/cujojs/when)
 Copyright (c) B Cavalier & J Hann
 Open source under the [MIT License](http://en.wikipedia.org/wiki/MIT_License).
@@ -1706,58 +1936,90 @@ Ext.define('Deft.promise.Promise', {
       });
     },
     /**
-    		* Returns a new {@link Deft.promise.Promise} that will only resolve once any one of the the specified `promisesOrValues` has resolved.
-    		* The resolution value will be the resolution value of the triggering `promiseOrValue`.
+    		* Initiates a competitive race, returning a new {@link Deft.promise.Promise} that will resolve when any one of the supplied `promisesOrValues`
+    		* have resolved, or will reject when all `promisesOrValues` have rejected or cancelled.
+    		* The resolution value will the first value of `promisesOrValues` to resolve.
     */
 
     any: function(promisesOrValues) {
+      return this.some(promisesOrValues, 1).then({
+        success: function(values) {
+          return values[0];
+        }
+      });
+    },
+    /**
+    		* Initiates a competitive race, returning a new {@link Deft.promise.Promise} that will resolve when `howMany` of the supplied `promisesOrValues`
+    		* have resolved, or will reject when it becomes impossible for `howMany` to resolve.
+    		* The resolution value will be an Array of the first `howMany` values of `promisesOrValues` to resolve.
+    */
+
+    some: function(promisesOrValues, howMany) {
       return this.when(promisesOrValues).then({
         success: function(promisesOrValues) {
-          var cancelFunction, canceller, complete, deferred, failureFunction, index, progressFunction, promiseOrValue, rejecter, resolver, successFunction, updater, _i, _len;
+          var cancelFunction, canceller, complete, deferred, errorMessage, failureFunction, index, progressFunction, promiseOrValue, rejecter, remainingToReject, remainingToResolve, resolver, successFunction, updater, values, _i, _len;
+          values = [];
+          remainingToResolve = howMany;
+          remainingToReject = (promisesOrValues.length - remainingToResolve) + 1;
           deferred = Ext.create('Deft.promise.Deferred');
-          updater = function(progress) {
-            deferred.update(progress);
-            return progress;
-          };
-          resolver = function(value) {
-            complete();
-            deferred.resolve(value);
-            return value;
-          };
-          rejecter = function(error) {
-            complete();
-            deferred.reject(error);
-            return error;
-          };
-          canceller = function(reason) {
-            complete();
-            deferred.cancel(reason);
-            return reason;
-          };
-          complete = function() {
-            return updater = resolver = rejecter = canceller = Ext.emptyFn;
-          };
-          successFunction = function(value) {
-            return resolver(value);
-          };
-          failureFunction = function(value) {
-            return rejecter(value);
-          };
-          progressFunction = function(value) {
-            return updater(value);
-          };
-          cancelFunction = function(value) {
-            return canceller(value);
-          };
-          for (index = _i = 0, _len = promisesOrValues.length; _i < _len; index = ++_i) {
-            promiseOrValue = promisesOrValues[index];
-            if (index in promisesOrValues) {
-              this.when(promiseOrValue).then({
-                success: successFunction,
-                failure: failureFunction,
-                progress: progressFunction,
-                cancel: cancelFunction
-              });
+          if (promisesOrValues.length < howMany) {
+            deferred.reject(new Error('Too few Promises or values were supplied to obtain the requested number of resolved values.'));
+          } else {
+            errorMessage = howMany === 1 ? 'No Promises were resolved.' : 'Too few Promises were resolved.';
+            updater = function(progress) {
+              deferred.update(progress);
+              return progress;
+            };
+            resolver = function(value) {
+              values.push(value);
+              remainingToResolve--;
+              if (remainingToResolve === 0) {
+                complete();
+                deferred.resolve(values);
+              }
+              return value;
+            };
+            rejecter = function(error) {
+              remainingToReject--;
+              if (remainingToReject === 0) {
+                complete();
+                deferred.reject(new Error(errorMessage));
+              }
+              return error;
+            };
+            canceller = function(reason) {
+              remainingToReject--;
+              if (remainingToReject === 0) {
+                complete();
+                deferred.reject(new Error(errorMessage));
+              }
+              return reason;
+            };
+            complete = function() {
+              return updater = resolver = rejecter = canceller = Ext.emptyFn;
+            };
+            successFunction = function(value) {
+              return resolver(value);
+            };
+            failureFunction = function(value) {
+              return rejecter(value);
+            };
+            progressFunction = function(value) {
+              return updater(value);
+            };
+            cancelFunction = function(value) {
+              return canceller(value);
+            };
+            for (index = _i = 0, _len = promisesOrValues.length; _i < _len; index = ++_i) {
+              promiseOrValue = promisesOrValues[index];
+              if (index in promisesOrValues) {
+                this.when(promiseOrValue).then({
+                  success: successFunction,
+                  failure: failureFunction,
+                  progress: progressFunction,
+                  cancel: cancelFunction
+                });
+              }
             }
           }
           return deferred.getPromise();
