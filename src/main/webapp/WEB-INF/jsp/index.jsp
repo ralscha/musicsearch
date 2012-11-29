@@ -58,10 +58,6 @@
     <script src="resources/extjs/<spring:eval expression='@environment["extjs.version"]'/>/ext-all.js"></script>
     <script src="wro/app-<spring:eval expression='@environment["application.version"]'/>.js"></script>   
   </c:if>
-
-  <% Locale locale = RequestContextUtils.getLocale(request); %>
-  <% if (locale != null && locale.getLanguage().toLowerCase().equals("de")) { %>
-    <script src="resources/extjs/<spring:eval expression='@environment["extjs.version"]'/>/locale/ext-lang-de.js"></script>
-  <% } %>	
+	
 </body>
 </html>
