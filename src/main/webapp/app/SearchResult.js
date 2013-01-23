@@ -76,6 +76,11 @@ Ext.define('MusicSearch.SearchResult', {
 				value: 'Please enter a search term'
 			}, '->', {
 				xtype: 'button',
+				text: 'Add All to Playlist',
+				itemId: 'addAllButton',
+				icon: app_context_path + '/resources/images/navigate_plus.png',
+			},{
+				xtype: 'button',
 				text: 'Add Selected to Playlist',
 				disabled: true,
 				itemId: 'addSelectedButton',

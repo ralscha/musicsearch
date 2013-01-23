@@ -67,44 +67,46 @@ Ext.define('MusicSearch.Playlist', {
 			dock: 'top',
 			items: [ {
 				xtype: 'button',
-				text: 'Play',
+				tooltip: 'Play',
 				disabled: true,
 				icon: app_context_path + '/resources/images/media_play.png',
 				itemId: 'playButton'
 			}, {
 				xtype: 'button',
-				text: 'Pause',
+				tooltip: 'Pause',
 				disabled: true,
 				icon: app_context_path + '/resources/images/media_pause.png',
 				enableToggle: true,
 				itemId: 'pauseButton'
 			}, {
 				xtype: 'button',
-				text: 'Stop',
+				tooltip: 'Stop',
 				disabled: true,
 				icon: app_context_path + '/resources/images/media_stop.png',
 				itemId: 'stopButton'
 			}, {
 				xtype: 'button',
-				text: 'Prev',
+				tooltip: 'Previous',
 				disabled: true,
 				icon: app_context_path + '/resources/images/media_step_back.png',
 				itemId: 'prevButton'
 			}, {
 				xtype: 'button',
-				text: 'Next',
+				tooltip: 'Next',
 				disabled: true,
 				icon: app_context_path + '/resources/images/media_step_forward.png',
 				itemId: 'nextButton'
-			}, {
+			}, '-', {
 				xtype: 'button',
-				text: 'Remove from playlist',
+				text: 'Remove',
+				tooltip: 'Remove from playlist',
 				disabled: true,
 				icon: app_context_path + '/resources/images/navigate_minus.png',
 				itemId: 'removeButton'
 			}, {
 				xtype: 'button',
-				text: 'Clear playlist',
+				text: 'Clear',
+				tooltip: 'Clear playlist',
 				disabled: true,
 				icon: app_context_path + '/resources/images/eraser.png',
 				itemId: 'clearButton'
@@ -121,7 +123,8 @@ Ext.define('MusicSearch.Playlist', {
 				text: '0:00/0:00'
 			}, '->', {
 				xtype: 'button',
-				text: 'Download Playlist',
+				text: 'Download',
+				tooltip: 'Download Playlist',
 				icon: app_context_path + '/resources/images/download.png',
 				disabled: true,
 				href: app_context_path + '/downloadMusicZip',

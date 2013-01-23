@@ -105,7 +105,7 @@
 		 * Creates the Element and DOM for the clear button
 		 */
 		createClearButtonEl: function() {
-			var animateWithClass = this.animateClearButton && this.animateWithCss3;
+			//var animateWithClass = this.animateClearButton && this.animateWithCss3;
 			this.clearButtonEl = this.textField.bodyEl.createChild({
 				tag: 'div',
 				cls: this.clearButtonCls
@@ -131,7 +131,7 @@
 					'msTransitionProperty', 'KhtmlTransitionProperty' ];
 
 			var style = el.dom.style;
-			for ( var i = 0, length = styles.length; i < length; ++i) {
+			for ( var i = 0, len = styles.length; i < len; ++i) {
 				if (style[styles[i]] !== 'undefined') {
 					// Supported property will result in empty string
 					return true;
@@ -297,7 +297,7 @@
 		 */
 		calculateClearButtonPosition: function(textField) {
 			var positions = textField.inputEl.getBox(true, true);
-			var top = positions.y;
+			var y = positions.y;
 			var right = positions.x;
 			if (this.fieldHasScrollBar()) {
 				right += Ext.getScrollBarWidth();
@@ -307,7 +307,7 @@
 			}
 			return {
 				right: right,
-				top: top
+				top: y
 			};
 		},
 

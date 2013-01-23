@@ -12,7 +12,6 @@
   <link rel="icon" type="image/png" href="<c:url value="/favicon32.png"/>" sizes="32x32" />
   <link rel="icon" type="image/png" href="<c:url value="/favicon48.png"/>" sizes="48x48" />
   
- 
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">	
   <title>MusicSearch</title>
   <style type="text/css">
