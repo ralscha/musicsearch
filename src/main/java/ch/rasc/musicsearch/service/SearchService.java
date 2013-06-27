@@ -91,9 +91,9 @@ public class SearchService {
 
 		List<Song> resultList = new ArrayList<>();
 
-		try (Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_41)) {
+		try (Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_43)) {
 
-			MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_41, FIELDS, analyzer);
+			MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_43, FIELDS, analyzer);
 			parser.setDefaultOperator(QueryParserBase.AND_OPERATOR);
 			parser.setAllowLeadingWildcard(true);
 
