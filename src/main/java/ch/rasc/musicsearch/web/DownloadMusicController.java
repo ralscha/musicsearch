@@ -54,7 +54,6 @@ public class DownloadMusicController {
 
 			if (xSendFile) {
 				String redirectUrl = environement.getProperty("xSendFileContext") + "/" + doc.get("directory") + "/" + doc.get("fileName");
-				System.out.println(redirectUrl);
 				response.setHeader("X-Accel-Redirect", redirectUrl);
 			} else {
 				response.setContentLength((int) Files.size(musicFile));
