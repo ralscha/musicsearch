@@ -8,6 +8,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.IntField;
@@ -137,7 +138,7 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 			writer.addDocument(doc);
 
 		} catch (IOException | CannotReadException | TagException | ReadOnlyFileException | InvalidAudioFrameException e) {
-			System.out.println(e.getMessage());
+			LogFactory.getLog(IndexFileWalker.class).info(e.getMessage());
 		}
 
 		return FileVisitResult.CONTINUE;
