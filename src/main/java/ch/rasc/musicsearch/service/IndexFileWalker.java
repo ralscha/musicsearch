@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -25,6 +24,7 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
+import org.springframework.util.StringUtils;
 
 public class IndexFileWalker extends SimpleFileVisitor<Path> {
 
@@ -102,32 +102,32 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 			// }
 
 			String value = tag.getFirst(FieldKey.TITLE);
-			if (StringUtils.isNotBlank(value)) {
+			if (StringUtils.hasText(value)) {
 				doc.add(new TextField("title", value, Field.Store.YES));
 			}
 
 			value = tag.getFirst(FieldKey.ARTIST);
-			if (StringUtils.isNotBlank(value)) {
+			if (StringUtils.hasText(value)) {
 				doc.add(new TextField("artist", value, Field.Store.YES));
 			}
 
 			value = tag.getFirst(FieldKey.ALBUM);
-			if (StringUtils.isNotBlank(value)) {
+			if (StringUtils.hasText(value)) {
 				doc.add(new TextField("album", value, Field.Store.YES));
 			}
 
 			value = tag.getFirst(FieldKey.COMMENT);
-			if (StringUtils.isNotBlank(value)) {
+			if (StringUtils.hasText(value)) {
 				doc.add(new TextField("comment", value, Field.Store.NO));
 			}
 
 			value = tag.getFirst(FieldKey.YEAR);
-			if (StringUtils.isNotBlank(value)) {
+			if (StringUtils.hasText(value)) {
 				doc.add(new TextField("year", value, Field.Store.YES));
 			}
 
 			value = tag.getFirst(FieldKey.COMPOSER);
-			if (StringUtils.isNotBlank(value)) {
+			if (StringUtils.hasText(value)) {
 				doc.add(new TextField("composer", value, Field.Store.NO));
 			}
 

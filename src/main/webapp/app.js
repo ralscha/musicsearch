@@ -29,6 +29,8 @@ MusicSearch.Utils.secondsToHms = function(d) {
 soundManager.setup({
 	url: app_context_path + '/resources/swf/',
 	flashVersion: 9,
+	preferFlash: true,
+	debugMode: true,
 	onready: function() {
 		Ext.create('MusicSearch.App');
 	}

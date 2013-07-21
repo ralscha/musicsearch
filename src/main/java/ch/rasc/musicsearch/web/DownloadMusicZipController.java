@@ -12,11 +12,11 @@ import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.document.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -35,7 +35,7 @@ public class DownloadMusicZipController {
 	public void export(@RequestParam(value = "sf", required = true) String selectedMusicIds,
 			HttpServletResponse response) throws IOException {
 
-		if (StringUtils.isNotBlank(selectedMusicIds)) {
+		if (StringUtils.hasText(selectedMusicIds)) {
 
 			Path tempFile = Files.createTempFile("mp3", "zip");
 

@@ -1,19 +1,13 @@
 Ext.define('Ext.ux.form.field.FilterField', {
 	extend: 'Ext.form.field.Trigger',
 	alias: 'widget.filterfield',
-	triggerCls: Ext.baseCSSPrefix + 'form-search-trigger',
 	
+	trigger1Cls: Ext.baseCSSPrefix + 'form-search-trigger',
+    trigger2Cls: Ext.baseCSSPrefix + 'form-clear-trigger',
 
 	initComponent: function() {
-		this.plugins = [ Ext.create('Ext.ux.form.field.ClearButton', {hideClearButtonWhenEmpty: false, hideClearButtonWhenMouseOut: false}) ],		
-		
 		this.on('specialkey', function(f, e) {
 			if (e.getKey() == e.ENTER) {
-				this.fireEvent('filter', this, this.getValue());
-			}
-		}, this);
-		this.on('change', function(f, val) {
-			if (!val) {
 				this.fireEvent('filter', this, this.getValue());
 			}
 		}, this);
@@ -21,7 +15,12 @@ Ext.define('Ext.ux.form.field.FilterField', {
 		this.callParent(arguments);
 	},
 
-	onTriggerClick: function() {
+	onTrigger1Click: function() {
 		this.fireEvent('filter', this, this.getValue());
 	},
+	
+	onTrigger2Click: function() {
+		this.setValue('');
+		this.fireEvent('filter', this, this.getValue());
+	}
 });

@@ -23,7 +23,7 @@
 
 		<maven.build.timestamp.format>yyyy-MM-dd'T'hh:mm:ss.SSSZ</maven.build.timestamp.format>
 		<build.timestamp>${maven.build.timestamp}</build.timestamp>
-		<extjs.version>4.1.3</extjs.version>
+		<extjs.version>4.2.1</extjs.version>
 	</properties>
 
 
@@ -86,23 +86,17 @@
 			<groupId>ch.ralscha</groupId>
 			<artifactId>extdirectspring</artifactId>
 			<version>${eds.version}</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>spring-asm</artifactId>
-					<groupId>org.springframework</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
 			<groupId>resources</groupId>
-			<artifactId>extjs</artifactId>
+			<artifactId>extjs-gpl</artifactId>
 			<version>${extjs.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>resources</groupId>
-			<artifactId>extjs-debug</artifactId>
+			<artifactId>extjs-gpl-debug</artifactId>
 			<version>${extjs.version}</version>
 			<scope>provided</scope>
 		</dependency>
@@ -110,13 +104,7 @@
 		<dependency>
 			<groupId>resources</groupId>
 			<artifactId>extjs-theme-steelblue</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>ro.isdc.wro4j</groupId>
-			<artifactId>wro4j-core</artifactId>
-			<version>1.6.3</version>
+			<version>${extjs.version}</version>
 		</dependency>
 
 		<dependency>
@@ -144,17 +132,13 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.glassfish.web</groupId>
-			<artifactId>jstl-impl</artifactId>
-			<version>1.2</version>
+			<groupId>com.yahoo.platform.yui</groupId>
+			<artifactId>yuicompressor</artifactId>
+			<version>2.4.7</version>
 			<exclusions>
 				<exclusion>
-					<artifactId>servlet-api</artifactId>
-					<groupId>javax.servlet</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jsp-api</artifactId>
-					<groupId>javax.servlet.jsp</groupId>
+					<groupId>rhino</groupId>
+					<artifactId>js</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -162,7 +146,7 @@
 		<dependency>
 			<groupId>ch.rasc</groupId>
 			<artifactId>embeddedtc</artifactId>
-			<version>1.8</version>
+			<version>1.9</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -239,7 +223,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>2.3</version>
+				<version>2.4</version>
 				<configuration>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 					<packagingExcludes>WEB-INF/classes/StartMusicSearch*</packagingExcludes>
@@ -283,6 +267,29 @@
 			</plugin>
 
 			<plugin>
+				<groupId>com.mysema.maven</groupId>
+				<artifactId>apt-maven-plugin</artifactId>
+				<version>1.1.1</version>
+				<executions>
+					<execution>
+						<id>modelgen</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<configuration>
+							<processor>ch.ralscha.extdirectspring.generator.ModelAnnotationProcessor</processor>
+							<outputDirectory>src/main/webapp/app</outputDirectory>
+							<options>
+								<debug>true</debug>
+								<outputFormat>extjs4</outputFormat>
+								<surroundApiWithQuotes>true</surroundApiWithQuotes>
+							</options>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
 				<groupId>com.googlecode.jslint4java</groupId>
 				<artifactId>jslint4java-maven-plugin</artifactId>
 				<version>2.0.5</version>
@@ -313,7 +320,7 @@
 								<unparam>true</unparam>
 								<plusplus>true</plusplus>
 								<predef>
-								  Ext,Deft
+									Ext,Deft
 								</predef>
 							</options>
 						</configuration>
@@ -324,7 +331,7 @@
 			<plugin>
 				<groupId>ch.rasc</groupId>
 				<artifactId>embeddedtc-maven-plugin</artifactId>
-				<version>1.5</version>
+				<version>1.6</version>
 				<executions>
 					<execution>
 						<goals>
@@ -334,13 +341,6 @@
 				</executions>
 				<configuration>
 					<finalName>musicsearch.jar</finalName>
-					<extraDependencies>
-						<dependency>
-							<groupId>mysql</groupId>
-							<artifactId>mysql-connector-java</artifactId>
-							<version>5.1.25</version>
-						</dependency>
-					</extraDependencies>
 				</configuration>
 			</plugin>
 

@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.analysis.Analyzer;
@@ -27,6 +26,7 @@ import org.apache.lucene.util.Version;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
 import ch.ralscha.extdirectspring.annotation.ExtDirectMethodType;
@@ -64,10 +64,10 @@ public class SearchService {
 			String totalDurationString = (String) properties.get("totalDuration");
 			String noOfSongsString = (String) properties.get("noOfSongs");
 
-			if (StringUtils.isNotBlank(totalDurationString)) {
+			if (StringUtils.hasText(totalDurationString)) {
 				info.setTotalDuration(Integer.valueOf(totalDurationString));
 			}
-			if (StringUtils.isNotBlank(noOfSongsString)) {
+			if (StringUtils.hasText(noOfSongsString)) {
 				info.setNoOfSongs(Integer.valueOf(noOfSongsString));
 			}
 
@@ -123,8 +123,8 @@ public class SearchService {
 
 				song.setEncoding(doc.get("encoding"));
 
-				if (StringUtils.isBlank(song.getArtist()) && StringUtils.isBlank(song.getAlbum())
-						&& StringUtils.isBlank(song.getTitle())) {
+				if (!StringUtils.hasText(song.getArtist()) && !StringUtils.hasText(song.getAlbum())
+						&& !StringUtils.hasText(song.getTitle())) {
 					song.setTitle(doc.get("fileName"));
 				}
 
