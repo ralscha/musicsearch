@@ -1,11 +1,12 @@
 <!DOCTYPE context>
 <Context>
-    <!-- Comment the following line to activate production profile -->
+    <!-- Comment out the following line to activate production profile -->
     <Environment name="spring.profiles.active" value="development" type="java.lang.String" override="false"/>
      
     <Environment name="musicDir" value="E:/music" type="java.lang.String" override="false"/>
     <Environment name="indexDir" value="e:/music_index" type="java.lang.String" override="false"/>
 
-    <Environment name="sendFileContext" value="/musiclib" type="java.lang.String" override="false"/>
-
+    <!-- 
+    <Environment name="nginxSendFileContext" value="/musiclib" type="java.lang.String" override="false"/>
+     -->
 </Context>

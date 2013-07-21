@@ -6,6 +6,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.document.Document;
@@ -35,10 +37,13 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 	private final IndexWriter writer;
 
 	private final Path baseDir;
+	
+	private final Set<String> artists;
 
 	public IndexFileWalker(IndexWriter writer, Path baseDir) {
 		this.writer = writer;
 		this.baseDir = baseDir;
+		this.artists = new TreeSet<>();
 	}
 
 	@Override
@@ -76,31 +81,6 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 
 			doc.add(new StoredField("encoding", encoding));
 
-			// 'mp3': {
-			// 'type': ['audio/mpeg; codecs="mp3"', 'audio/mpeg', 'audio/mp3',
-			// 'audio/MPA', 'audio/mpa-robust'],
-			// 'required': true
-			// },
-			//
-			// 'mp4': {
-			// 'related': ['aac','m4a'], // additional formats under the MP4
-			// container
-			// 'type': ['audio/mp4; codecs="mp4a.40.2"', 'audio/aac',
-			// 'audio/x-m4a', 'audio/MP4A-LATM', 'audio/mpeg4-generic'],
-			// 'required': false
-			// },
-			//
-			// 'ogg': {
-			// 'type': ['audio/ogg; codecs=vorbis'],
-			// 'required': false
-			// },
-			//
-			// 'wav': {
-			// 'type': ['audio/wav; codecs="1"', 'audio/wav', 'audio/wave',
-			// 'audio/x-wav'],
-			// 'required': false
-			// }
-
 			String value = tag.getFirst(FieldKey.TITLE);
 			if (StringUtils.hasText(value)) {
 				doc.add(new TextField("title", value, Field.Store.YES));
@@ -109,6 +89,7 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 			value = tag.getFirst(FieldKey.ARTIST);
 			if (StringUtils.hasText(value)) {
 				doc.add(new TextField("artist", value, Field.Store.YES));
+				artists.add(value);
 			}
 
 			value = tag.getFirst(FieldKey.ALBUM);
@@ -151,6 +132,10 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 
 	public int getNoOfSongs() {
 		return noOfSongs;
+	}
+
+	public Set<String> getArtists() {
+		return artists;
 	}
 
 }

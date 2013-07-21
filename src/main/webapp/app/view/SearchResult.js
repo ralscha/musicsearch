@@ -1,9 +1,11 @@
-Ext.define('MusicSearch.SearchResult', {
+Ext.define('MusicSearch.view.SearchResult', {
 	extend: 'Ext.grid.Panel',
 	inject: 'searchResultStore',
-	controller: 'MusicSearch.SearchResultController',
+	controller: 'MusicSearch.controller.SearchResultController',
 	title: 'Search Music',
-
+	
+	requires: [ 'Ext.ux.form.field.FilterField' ],
+	
 	multiSelect: true,
 
 	viewConfig: {
@@ -26,26 +28,21 @@ Ext.define('MusicSearch.SearchResult', {
 				hideable: false
 			},
 			items: [ {
-				xtype: 'gridcolumn',
 				dataIndex: 'title',
 				text: 'Title',
 				flex: 4
 			}, {
-				xtype: 'gridcolumn',
 				dataIndex: 'album',
 				text: 'Album',
 				flex: 2
 			}, {
-				xtype: 'gridcolumn',
 				dataIndex: 'artist',
 				text: 'Artist',
 				flex: 2
 			}, {
-				xtype: 'gridcolumn',
 				dataIndex: 'year',
 				text: 'Year'
 			}, {
-				xtype: 'gridcolumn',
 				dataIndex: 'durationInSeconds',
 				text: 'Duration',
 				align: 'right',
@@ -68,7 +65,9 @@ Ext.define('MusicSearch.SearchResult', {
 				xtype: 'filterfield',
 				itemId: 'searchTextField',
 				padding: 3,
-				fieldLabel: 'Search'
+				fieldLabel: 'Search',
+				width: 500,
+				labelWidth: 50
 			}, {
 				xtype: 'displayfield',
 				itemId: 'searchInfoDisplayField',

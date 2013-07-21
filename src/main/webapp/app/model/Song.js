@@ -1,4 +1,4 @@
-Ext.define("MusicSearch.Song",
+Ext.define("MusicSearch.model.Song",
 {
   extend : "Ext.data.Model",
   fields : [ {

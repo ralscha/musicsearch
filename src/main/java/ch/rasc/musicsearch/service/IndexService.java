@@ -1,7 +1,8 @@
 package ch.rasc.musicsearch.service;
 
-import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -80,7 +81,6 @@ public class IndexService {
 		try (Directory dir = FSDirectory.open(ixDir.toFile());
 				Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_43)) {
 			IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_43, analyzer);
-			// iwc.setOpenMode(OpenMode.CREATE);
 			iwc.setOpenMode(OpenMode.CREATE_OR_APPEND);
 
 			IndexFileWalker walker = null;
@@ -93,11 +93,19 @@ public class IndexService {
 			}
 
 			Path infoFile = ixDir.resolve("info.properties");
-			try (FileWriter fw = new FileWriter(infoFile.toFile())) {
+			try (BufferedWriter bw = Files.newBufferedWriter(infoFile, StandardCharsets.UTF_8)) {
 				Properties properties = new Properties();
 				properties.put("totalDuration", String.valueOf(walker.getTotalDuration()));
 				properties.put("noOfSongs", String.valueOf(walker.getNoOfSongs()));
-				properties.store(fw, "dbinfo");
+				properties.store(bw, "dbinfo");
+			}
+
+			Path artistsFile = ixDir.resolve("artists.txt");
+			try (BufferedWriter bw = Files.newBufferedWriter(artistsFile, StandardCharsets.UTF_8)) {
+				for (String artist : walker.getArtists()) {
+					bw.write(artist);
+					bw.write("\n");
+				}
 			}
 		}
 	}

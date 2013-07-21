@@ -1,6 +1,6 @@
-Ext.define('MusicSearch.Playlist', {
+Ext.define('MusicSearch.view.Playlist', {
 	extend: 'Ext.grid.Panel',
-	controller: 'MusicSearch.PlaylistController',
+	controller: 'MusicSearch.controller.PlaylistController',
 	inject: 'playlistStore',
 	title: 'Now playing:',
 	multiSelect: true,
@@ -9,7 +9,7 @@ Ext.define('MusicSearch.Playlist', {
 	viewConfig: {
 		getRowClass: function(rec, idx, rowPrms, ds) {
 			return rec.data.playing ? 'playlist-playing-row' : '';
-		},		
+		},
 		plugins: {
 			ptype: 'gridviewdragdrop',
 			ddGroup: 'playlistGroup',
@@ -27,26 +27,21 @@ Ext.define('MusicSearch.Playlist', {
 				hideable: false
 			},
 			items: [ {
-				xtype: 'gridcolumn',
 				dataIndex: 'title',
 				text: 'Title',
 				flex: 4
 			}, {
-				xtype: 'gridcolumn',
 				dataIndex: 'album',
 				text: 'Album',
 				flex: 2
 			}, {
-				xtype: 'gridcolumn',
 				dataIndex: 'artist',
 				text: 'Artist',
 				flex: 2
 			}, {
-				xtype: 'gridcolumn',
 				dataIndex: 'year',
 				text: 'Year'
 			}, {
-				xtype: 'gridcolumn',
 				dataIndex: 'durationInSeconds',
 				text: 'Duration',
 				align: 'right',

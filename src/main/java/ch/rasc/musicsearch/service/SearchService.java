@@ -1,8 +1,10 @@
 package ch.rasc.musicsearch.service;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
 import ch.ralscha.extdirectspring.annotation.ExtDirectMethodType;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
 import ch.ralscha.extdirectspring.filter.StringFilter;
+import ch.rasc.musicsearch.model.Artist;
 import ch.rasc.musicsearch.model.Info;
 import ch.rasc.musicsearch.model.Song;
 
@@ -56,9 +59,9 @@ public class SearchService {
 		try {
 			Path infoFile = Paths.get(environement.getProperty("indexDir"), "info.properties");
 			Properties properties;
-			try (FileReader fr = new FileReader(infoFile.toFile())) {
+			try (BufferedReader br = Files.newBufferedReader(infoFile, StandardCharsets.UTF_8)) {
 				properties = new Properties();
-				properties.load(fr);
+				properties.load(br);
 			}
 
 			String totalDurationString = (String) properties.get("totalDuration");
@@ -78,6 +81,18 @@ public class SearchService {
 		}
 
 		return info;
+	}
+	
+	@ExtDirectMethod(value = ExtDirectMethodType.STORE_READ)
+	public List<Artist> readArtists() throws IOException {
+		Path artistsFile = Paths.get(environement.getProperty("indexDir"), "artists.txt");
+		List<String> artists = Files.readAllLines(artistsFile, StandardCharsets.UTF_8);
+
+		List<Artist> artistsList = new ArrayList<>();
+		for (String artist : artists) {
+			artistsList.add(new Artist(artist));
+		}
+		return artistsList;
 	}
 
 	@ExtDirectMethod(value = ExtDirectMethodType.STORE_READ)

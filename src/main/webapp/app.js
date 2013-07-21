@@ -7,11 +7,13 @@ Ext.define('MusicSearch.App', {
 		Ext.tip.QuickTipManager.init();
 
 		Deft.Injector.configure({
-			searchResultStore: 'MusicSearch.SongsStore',
-			playlistStore: 'MusicSearch.PlaylistStore'
+			searchResultStore: 'MusicSearch.store.SongsStore',
+			playlistStore: 'MusicSearch.store.PlaylistStore',
+			artistsStore: 'MusicSearch.store.ArtistsStore',
+			messageBus: 'Ext.util.Observable'
 		});
 
-		Ext.create('MusicSearch.Viewport');
+		Ext.create('MusicSearch.view.Viewport');
 	}
 });
 

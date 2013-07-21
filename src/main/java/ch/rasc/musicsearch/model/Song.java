@@ -2,7 +2,7 @@ package ch.rasc.musicsearch.model;
 
 import ch.ralscha.extdirectspring.generator.Model;
 
-@Model(value = "MusicSearch.Song", readMethod = "searchService.search")
+@Model(value = "MusicSearch.model.Song", readMethod = "searchService.search")
 public class Song {
 
 	private int id;

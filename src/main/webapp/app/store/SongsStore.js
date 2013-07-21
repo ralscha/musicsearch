@@ -1,6 +1,6 @@
-Ext.define('MusicSearch.SongsStore', {
+Ext.define('MusicSearch.store.SongsStore', {
 	extend: 'Ext.data.Store',
-	model: 'MusicSearch.Song',
+	model: 'MusicSearch.model.Song',
 	autoLoad: false,
 	remoteSort: false,
 	remoteFilter: true

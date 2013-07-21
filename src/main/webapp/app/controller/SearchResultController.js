@@ -1,13 +1,16 @@
-Ext.define('MusicSearch.SearchResultController', {
+Ext.define('MusicSearch.controller.SearchResultController', {
 	extend: 'Deft.mvc.ViewController',
-	inject: [ 'searchResultStore', 'playlistStore' ],
+	inject: [ 'searchResultStore', 'playlistStore', 'messageBus' ],
 
 	observe: {
 		searchResultStore: {
 			load: 'onSearchResultStoreLoad'
+		},
+		messageBus: {
+			artistSelected: 'onArtistSelected'
 		}
 	},
-
+	
 	control: {
 		searchTextField: {
 			filter: 'onSearchTextFieldFilter'
@@ -46,6 +49,12 @@ Ext.define('MusicSearch.SearchResultController', {
 
 	},
 
+	onArtistSelected: function(name) {
+		var term = 'artist:"'+name+'"';
+		this.getSearchTextField().setValue(term);
+		this.searchSongs(term);
+	},
+	
 	onSelectionChange: function() {
 		var params = {};
 
@@ -72,15 +81,15 @@ Ext.define('MusicSearch.SearchResultController', {
 	},
 
 	onSearchTextFieldFilter: function(cmp, newValue) {
-		var filterValue = Ext.String.trim(newValue) || '';
+		this.searchSongs(newValue);
+	},
+	
+	searchSongs: function(term) {
+		var filterValue = Ext.String.trim(term) || '';
 
 		if (!Ext.isEmpty(filterValue)) {
-			this.searchResultStore.remoteFilter = false;
 			this.searchResultStore.clearFilter(true);
-			this.searchResultStore.remoteFilter = true;
-
 			this.searchResultStore.removeAll();
-
 			this.searchResultStore.filter('filter', filterValue);
 		} else {
 			this.searchResultStore.removeAll();

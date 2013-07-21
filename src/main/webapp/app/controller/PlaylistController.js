@@ -1,4 +1,4 @@
-Ext.define('MusicSearch.PlaylistController', {
+Ext.define('MusicSearch.controller.PlaylistController', {
 	extend: 'Deft.mvc.ViewController',
 	inject: 'playlistStore',
 
