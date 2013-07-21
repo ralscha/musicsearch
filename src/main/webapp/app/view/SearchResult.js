@@ -77,13 +77,13 @@ Ext.define('MusicSearch.view.SearchResult', {
 				xtype: 'button',
 				text: 'Add All to Playlist',
 				itemId: 'addAllButton',
-				icon: app_context_path + '/resources/images/navigate_plus.png',
+				icon: app_context_path + '/resources/images/navigate_plus.png'
 			},{
 				xtype: 'button',
 				text: 'Add Selected to Playlist',
 				disabled: true,
 				itemId: 'addSelectedButton',
-				icon: app_context_path + '/resources/images/navigate_plus.png',
+				icon: app_context_path + '/resources/images/navigate_plus.png'
 			}, {
 				xtype: 'button',
 				text: 'Download Selected',

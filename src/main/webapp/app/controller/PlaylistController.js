@@ -8,7 +8,7 @@ Ext.define('MusicSearch.controller.PlaylistController', {
 		playlistStore: {
 			datachanged: 'onPlaylistDatachanged',
 			clear: 'onPlaylistDatachanged'
-		},
+		}
 	},
 
 	control: {
@@ -53,9 +53,6 @@ Ext.define('MusicSearch.controller.PlaylistController', {
 		},
 		progressText: true,
 		downloadPlaylistButton: true
-	},
-
-	init: function() {
 	},
 
 	onPlaylistDatachanged: function(store) {
@@ -275,7 +272,7 @@ Ext.define('MusicSearch.controller.PlaylistController', {
 			},
 			whileplaying: function() {
 				me.onSoundManagerWhilePlaying(me, this);
-			},
+			}
 		});
 		
 		this.setNowPlaying(song);
