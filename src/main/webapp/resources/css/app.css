@@ -1,7 +1,7 @@
-.x-grid-row-selected .x-grid-cell,.x-grid-row-selected .x-grid-rowwrap-div {
-	background-color: #C1D9F0 !important;
+.playlist-playing-row {
+	color: green !important;	
 }
 
-.playlist-playing-row {
-	color: red !important;
+.playlist-playing-row > td {
+	font-weight: bold !important;
 }
