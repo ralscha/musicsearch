@@ -30,9 +30,9 @@ public class DownloadMusicController {
 	private IndexService indexService;
 
 	private String nginxSendFileContext;
-	
+
 	private boolean apacheSendFile;
-	
+
 	@PostConstruct
 	public void init() {
 		nginxSendFileContext = environement.getProperty("nginxSendFileContext");
@@ -59,18 +59,22 @@ public class DownloadMusicController {
 			} else if (apacheSendFile) {
 				response.setHeader("X-SendFile", musicFile.toAbsolutePath().toString());
 			} else if (Boolean.TRUE.equals(request.getAttribute("org.apache.tomcat.sendfile.support"))) {
-				response.setContentLength((int) fileSize);
-
 				long startAt = 0;
+				long end = fileSize - 1;
 				String rangeHeader = request.getHeader("Range");
 				if (rangeHeader != null) {
 					response.setStatus(206);
 
-					startAt = Long.parseLong(rangeHeader.replace("bytes=", "").split("-")[0]);
+					String[] startEnd = rangeHeader.replace("bytes=", "").split("-");
+					if (startEnd.length >= 1) {
+						startAt = Long.parseLong(startEnd[0]);
+					}
+					if (startEnd.length == 2) {
+						end = Long.parseLong(startEnd[1]);
+					}
 
-					response.setHeader("Content-Range",
-							String.format("bytes %d-%d/%d", startAt, fileSize - 1, fileSize));
-					long dataToWrite = fileSize - startAt;
+					response.setHeader("Content-Range", String.format("bytes %d-%d/%d", startAt, end, fileSize));
+					long dataToWrite = (end + 1) - startAt;
 					response.setContentLength((int) dataToWrite);
 				} else {
 					response.setContentLength((int) fileSize);
@@ -78,7 +82,7 @@ public class DownloadMusicController {
 
 				request.setAttribute("org.apache.tomcat.sendfile.filename", musicFile.toString());
 				request.setAttribute("org.apache.tomcat.sendfile.start", startAt);
-				request.setAttribute("org.apache.tomcat.sendfile.end", fileSize);
+				request.setAttribute("org.apache.tomcat.sendfile.end", end + 1);
 
 			} else {
 				response.setContentLength((int) fileSize);
