@@ -12,12 +12,6 @@ Ext.define('MusicSearch.controller.PlaylistController', {
 	},
 
 	control: {
-		playlistGridPanelView: {
-			selector: 'gridview',
-			listeners: {
-				beforedrop: 'onPlaylistGridPanelViewBeforedrop'
-			}
-		},
 		view: {
 			selectionchange: 'onSelectionchange',
 			itemdblclick: 'onItemDblClick'
@@ -333,34 +327,6 @@ Ext.define('MusicSearch.controller.PlaylistController', {
 	
 	onSoundManagerWhilePlaying: function(controller, sound) {
 		controller.updateProgress();
-	},
-	
-	onPlaylistGridPanelViewBeforedrop: function(node, data, overModel,
-			dropPosition, dropFunction, eOpts) {
-		
-		if (!data.copy) {
-			return true;
-		}
-		
-		var index;
-		var record = this.getView().getView().getRecord(node);
-		if (record == undefined) {
-			index = this.playlistStore.getCount();
-		} else {
-			index = this.playlistStore.indexOf(record);
-			if (dropPosition == 'after') {
-				index++;
-			}
-		}		
-		
-		var insertRecords = [];
-		for (var i = 0; i < data.records.length; i++) {
-			if (this.playlistStore.indexOf(data.records[i]) === -1) {
-				insertRecords.push(data.records[i]);				
-			}
-		}
-		this.playlistStore.insert(index, insertRecords);
-		return false;
 	}
 
 });
