@@ -341,6 +341,13 @@
 				</executions>
 				<configuration>
 					<finalName>musicsearch.jar</finalName>
+					<extraDependencies>
+						<dependency>
+							<groupId>mysql</groupId>
+							<artifactId>mysql-connector-java</artifactId>
+							<version>5.1.25</version>
+						</dependency>
+					</extraDependencies>					
 				</configuration>
 			</plugin>
 
@@ -348,20 +355,20 @@
 
 
 	</build>
-	
-		<pluginRepositories>
-				<pluginRepository>
-					<id>sonatype</id>
-					<name>sonatype</name>
-					<url>https://oss.sonatype.org/content/groups/public</url>
-					<snapshots>
-						<enabled>true</enabled>
-					</snapshots>
-					<releases>
-						<enabled>true</enabled>
-					</releases>
-				</pluginRepository>
-		</pluginRepositories>
-	
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>sonatype</id>
+			<name>sonatype</name>
+			<url>https://oss.sonatype.org/content/groups/public</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
+
 
 </project>
