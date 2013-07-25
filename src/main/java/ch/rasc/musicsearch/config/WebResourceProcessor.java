@@ -13,6 +13,8 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,6 +27,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
+import javax.xml.bind.DatatypeConverter;
 
 import org.mozilla.javascript.ErrorReporter;
 import org.mozilla.javascript.EvaluatorException;
@@ -176,7 +179,7 @@ public class WebResourceProcessor {
 				if (key.endsWith("_js")) {
 					String root = key.substring(0, key.length() - 3);
 
-					String crc = Base62.generateMD5asBase62String(content);
+					String crc = computeMD5andEncodeWithURLSafeBase64(content);
 					String servletPath = "/" + root + crc + ".js";
 					container.addServlet(root + crc + "js", new ResourceServlet(content, "application/javascript"))
 							.addMapping(servletPath);
@@ -186,7 +189,7 @@ public class WebResourceProcessor {
 
 				} else if (key.endsWith("_css")) {
 					String root = key.substring(0, key.length() - 4);
-					String crc = Base62.generateMD5asBase62String(content);
+					String crc = computeMD5andEncodeWithURLSafeBase64(content);
 					String servletPath = "/" + root + crc + ".css";
 					container.addServlet(root + crc + "css", new ResourceServlet(content, "text/css")).addMapping(
 							servletPath);
@@ -341,6 +344,20 @@ public class WebResourceProcessor {
 			logger.error("read variables from property '" + versionPropertiesName + "'", ioe);
 		}
 		return Collections.emptyMap();
+	}
+	
+	private static String computeMD5andEncodeWithURLSafeBase64(byte[] content) {
+		try {
+			MessageDigest md5Digest = MessageDigest.getInstance("MD5");
+			md5Digest.update(content);
+			byte[] md5 = md5Digest.digest();
+			
+			String base64 = DatatypeConverter.printBase64Binary(md5);
+			return base64.replace('+','-').replace('/','_').replace("=", "");
+			
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private final class JavaScriptCompressorErrorReporter implements ErrorReporter {
