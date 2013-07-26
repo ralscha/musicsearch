@@ -39,13 +39,18 @@ import com.yahoo.platform.yui.compressor.CssCompressor;
 import com.yahoo.platform.yui.compressor.JavaScriptCompressor;
 
 public class WebResourceProcessor {
-	private static final String HTML_SCRIPTORLINK = "s";
+
+	private final static Logger logger = LoggerFactory.getLogger(WebResourceProcessor.class);
+
+	private static final String HTML_SCRIPT_OR_LINK = "s";
 
 	private static final String MODE_PRODUCTION = "p";
 
 	private static final String MODE_DEVELOPMENT = "d";
 
-	private final static Logger logger = LoggerFactory.getLogger(WebResourceProcessor.class);
+	private static final String CSS_EXTENSION = "_css";
+
+	private static final String JS_EXTENSION = "_js";
 
 	private final static Pattern DEV_CODE_PATTERN = Pattern.compile("/\\* <debug> \\*/.*?/\\* </debug> \\*/",
 			Pattern.DOTALL);
@@ -65,53 +70,53 @@ public class WebResourceProcessor {
 
 	private int cssLinebreakPos = 120;
 
-	int jsLinebreakPos = 120;
+	private int jsLinebreakPos = 120;
 
-	boolean jsCompressorMunge = false;
+	private boolean jsCompressorMunge = false;
 
-	boolean jsCompressorVerbose = false;
+	private boolean jsCompressorVerbose = false;
 
-	boolean jsCompressorPreserveAllSemiColons = true;
+	private boolean jsCompressorPreserveAllSemiColons = true;
 
-	boolean jsCompressordisableOptimizations = true;
+	private boolean jsCompressordisableOptimizations = true;
 
-	public WebResourceProcessor(boolean production) {
+	public WebResourceProcessor(final boolean production) {
 		this.production = production;
 	}
 
-	public void setWebResourcesConfigName(String webResourcesConfigName) {
+	public void setWebResourcesConfigName(final String webResourcesConfigName) {
 		this.webResourcesConfigName = webResourcesConfigName;
 	}
 
-	public void setVersionPropertiesName(String versionPropertiesName) {
+	public void setVersionPropertiesName(final String versionPropertiesName) {
 		this.versionPropertiesName = versionPropertiesName;
 	}
 
-	public void setCssLinebreakPos(int cssLinebreakPos) {
+	public void setCssLinebreakPos(final int cssLinebreakPos) {
 		this.cssLinebreakPos = cssLinebreakPos;
 	}
 
-	public void setJsLinebreakPos(int jsLinebreakPos) {
+	public void setJsLinebreakPos(final int jsLinebreakPos) {
 		this.jsLinebreakPos = jsLinebreakPos;
 	}
 
-	public void setJsCompressorMunge(boolean jsCompressorMunge) {
+	public void setJsCompressorMunge(final boolean jsCompressorMunge) {
 		this.jsCompressorMunge = jsCompressorMunge;
 	}
 
-	public void setJsCompressorVerbose(boolean jsCompressorVerbose) {
+	public void setJsCompressorVerbose(final boolean jsCompressorVerbose) {
 		this.jsCompressorVerbose = jsCompressorVerbose;
 	}
 
-	public void setJsCompressorPreserveAllSemiColons(boolean jsCompressorPreserveAllSemiColons) {
+	public void setJsCompressorPreserveAllSemiColons(final boolean jsCompressorPreserveAllSemiColons) {
 		this.jsCompressorPreserveAllSemiColons = jsCompressorPreserveAllSemiColons;
 	}
 
-	public void setJsCompressordisableOptimizations(boolean jsCompressordisableOptimizations) {
+	public void setJsCompressordisableOptimizations(final boolean jsCompressordisableOptimizations) {
 		this.jsCompressordisableOptimizations = jsCompressordisableOptimizations;
 	}
 
-	public void process(ServletContext container) {
+	public void process(final ServletContext container) {
 
 		Map<String, StringBuilder> scriptAndLinkTags = new HashMap<>();
 		Map<String, StringBuilder> sourceCodes = new HashMap<>();
@@ -150,10 +155,10 @@ public class WebResourceProcessor {
 			if (!production && mode.contains(MODE_DEVELOPMENT)) {
 				scriptAndLinkTags.get(varName).append(createHtmlCode(container, line, varName));
 			} else if (production && mode.contains(MODE_PRODUCTION)) {
-				if (mode.contains(HTML_SCRIPTORLINK)) {
+				if (mode.contains(HTML_SCRIPT_OR_LINK)) {
 					scriptAndLinkTags.get(varName).append(createHtmlCode(container, line, varName));
 				} else {
-					boolean jsProcessing = varName.endsWith("_js");
+					boolean jsProcessing = varName.endsWith(JS_EXTENSION);
 					for (String resource : enumerateResources(container, line, jsProcessing ? ".js" : ".css")) {
 						try (InputStream lis = container.getResourceAsStream(resource)) {
 							String sourcecode = inputStream2String(lis, StandardCharsets.UTF_8);
@@ -175,8 +180,8 @@ public class WebResourceProcessor {
 			if (entry.getValue().length() > 0) {
 				byte[] content = entry.getValue().toString().getBytes(StandardCharsets.UTF_8);
 
-				if (key.endsWith("_js")) {
-					String root = key.substring(0, key.length() - 3);
+				if (key.endsWith(JS_EXTENSION)) {
+					String root = key.substring(0, key.length() - JS_EXTENSION.length());
 
 					String crc = computeMD5andEncodeWithURLSafeBase64(content);
 					String servletPath = "/" + root + crc + ".js";
@@ -186,8 +191,8 @@ public class WebResourceProcessor {
 					scriptAndLinkTags.get(key).append(
 							String.format(JAVASCRIPT_TAG, container.getContextPath() + servletPath));
 
-				} else if (key.endsWith("_css")) {
-					String root = key.substring(0, key.length() - 4);
+				} else if (key.endsWith(CSS_EXTENSION)) {
+					String root = key.substring(0, key.length() - CSS_EXTENSION.length());
 					String crc = computeMD5andEncodeWithURLSafeBase64(content);
 					String servletPath = "/" + root + crc + ".css";
 					container.addServlet(root + crc + "css", new ResourceServlet(content, "text/css")).addMapping(
@@ -205,7 +210,7 @@ public class WebResourceProcessor {
 
 	}
 
-	private List<String> enumerateResources(ServletContext container, String line, String suffix) {
+	private List<String> enumerateResources(final ServletContext container, final String line, final String suffix) {
 		if (line.endsWith("/")) {
 			List<String> resources = new ArrayList<>();
 
@@ -275,12 +280,12 @@ public class WebResourceProcessor {
 
 	private static String createHtmlCode(ServletContext container, String line, String varName) {
 		String url = container.getContextPath() + line;
-		if (varName.endsWith("_js")) {
+		if (varName.endsWith(JS_EXTENSION)) {
 			return String.format(JAVASCRIPT_TAG, url);
-		} else if (varName.endsWith("_css")) {
+		} else if (varName.endsWith(CSS_EXTENSION)) {
 			return String.format(CSSLINK_TAG, url);
 		}
-		logger.warn("Variable has to end with _js or _css");
+		logger.warn("Variable has to end with {} or {}", JS_EXTENSION, CSS_EXTENSION);
 		return null;
 	}
 
@@ -332,17 +337,19 @@ public class WebResourceProcessor {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private Map<String, String> readVariablesFromPropertyResource() {
-		try (InputStream is = getClass().getResourceAsStream(versionPropertiesName)) {
-			Properties properties = new Properties();
-			properties.load(is);
-			return (Map) properties;
-		} catch (IOException ioe) {
-			logger.error("read variables from property '" + versionPropertiesName + "'", ioe);
+		if (versionPropertiesName != null) {
+			try (InputStream is = getClass().getResourceAsStream(versionPropertiesName)) {
+				Properties properties = new Properties();
+				properties.load(is);
+				return (Map) properties;
+			} catch (IOException ioe) {
+				logger.error("read variables from property '" + versionPropertiesName + "'", ioe);
+			}
 		}
 		return Collections.emptyMap();
 	}
 
-	private static String computeMD5andEncodeWithURLSafeBase64(byte[] content) {
+	private static String computeMD5andEncodeWithURLSafeBase64(final byte[] content) {
 		try {
 			MessageDigest md5Digest = MessageDigest.getInstance("MD5");
 			md5Digest.update(content);
@@ -356,7 +363,7 @@ public class WebResourceProcessor {
 		}
 	}
 
-	private final class JavaScriptCompressorErrorReporter implements ErrorReporter {
+	private final static class JavaScriptCompressorErrorReporter implements ErrorReporter {
 		@Override
 		public void warning(String message, String sourceName, int line, String lineSource, int lineOffset) {
 			if (line < 0) {
