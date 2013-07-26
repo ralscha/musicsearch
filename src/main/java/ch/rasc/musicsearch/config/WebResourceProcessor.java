@@ -68,6 +68,8 @@ public class WebResourceProcessor {
 
 	private final boolean production;
 
+	private int cacheInMonths = 12;
+
 	private int cssLinebreakPos = 120;
 
 	private int jsLinebreakPos = 120;
@@ -82,6 +84,10 @@ public class WebResourceProcessor {
 
 	public WebResourceProcessor(final boolean production) {
 		this.production = production;
+	}
+
+	public void setCacheInMonths(int cacheInMonths) {
+		this.cacheInMonths = cacheInMonths;
 	}
 
 	public void setWebResourcesConfigName(final String webResourcesConfigName) {
@@ -185,8 +191,9 @@ public class WebResourceProcessor {
 
 					String crc = computeMD5andEncodeWithURLSafeBase64(content);
 					String servletPath = "/" + root + crc + ".js";
-					container.addServlet(root + crc + "js", new ResourceServlet(content, "application/javascript"))
-							.addMapping(servletPath);
+					container.addServlet(root + crc + "js",
+							new ResourceServlet(content, crc, cacheInMonths, "application/javascript")).addMapping(
+							servletPath);
 
 					scriptAndLinkTags.get(key).append(
 							String.format(JAVASCRIPT_TAG, container.getContextPath() + servletPath));
@@ -195,8 +202,8 @@ public class WebResourceProcessor {
 					String root = key.substring(0, key.length() - CSS_EXTENSION.length());
 					String crc = computeMD5andEncodeWithURLSafeBase64(content);
 					String servletPath = "/" + root + crc + ".css";
-					container.addServlet(root + crc + "css", new ResourceServlet(content, "text/css")).addMapping(
-							servletPath);
+					container.addServlet(root + crc + "css",
+							new ResourceServlet(content, crc, cacheInMonths, "text/css")).addMapping(servletPath);
 
 					scriptAndLinkTags.get(key).append(
 							String.format(CSSLINK_TAG, container.getContextPath() + servletPath));
