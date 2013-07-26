@@ -9,7 +9,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -247,10 +246,8 @@ public class WebResourceProcessor {
 	}
 
 	private static List<String> readAllLines(InputStream is, Charset cs) throws IOException {
-		CharsetDecoder decoder = cs.newDecoder();
-		Reader inputStreamReader = new InputStreamReader(is, decoder);
-
-		try (BufferedReader reader = new BufferedReader(inputStreamReader)) {
+		try (Reader inputStreamReader = new InputStreamReader(is, cs.newDecoder());
+				BufferedReader reader = new BufferedReader(inputStreamReader)) {
 			List<String> result = new ArrayList<>();
 			for (;;) {
 				String line = reader.readLine();
@@ -265,8 +262,7 @@ public class WebResourceProcessor {
 
 	private static String inputStream2String(InputStream is, Charset cs) throws IOException {
 		StringBuilder to = new StringBuilder();
-		CharsetDecoder decoder = cs.newDecoder();
-		try (Reader from = new InputStreamReader(is, decoder)) {
+		try (Reader from = new InputStreamReader(is, cs.newDecoder())) {
 			CharBuffer buf = CharBuffer.allocate(0x800);
 			while (from.read(buf) != -1) {
 				buf.flip();
@@ -345,16 +341,16 @@ public class WebResourceProcessor {
 		}
 		return Collections.emptyMap();
 	}
-	
+
 	private static String computeMD5andEncodeWithURLSafeBase64(byte[] content) {
 		try {
 			MessageDigest md5Digest = MessageDigest.getInstance("MD5");
 			md5Digest.update(content);
 			byte[] md5 = md5Digest.digest();
-			
+
 			String base64 = DatatypeConverter.printBase64Binary(md5);
-			return base64.replace('+','-').replace('/','_').replace("=", "");
-			
+			return base64.replace('+', '-').replace('/', '_').replace("=", "");
+
 		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException(e);
 		}
