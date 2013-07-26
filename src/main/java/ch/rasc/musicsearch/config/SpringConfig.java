@@ -1,12 +1,15 @@
 package ch.rasc.musicsearch.config;
 
 import org.slf4j.bridge.SLF4JBridgeHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -18,6 +21,9 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @PropertySource({ "version.properties" })
 public class SpringConfig extends WebMvcConfigurerAdapter {
 
+	@Autowired
+	private Environment environment;
+	
 	public SpringConfig() {
 		SLF4JBridgeHandler.removeHandlersForRootLogger();
 		SLF4JBridgeHandler.install();
@@ -30,7 +36,10 @@ public class SpringConfig extends WebMvcConfigurerAdapter {
 	
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/").setCachePeriod(31556926);
+		ResourceHandlerRegistration registration = registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+		if (environment.acceptsProfiles("production")) {
+			registration.setCachePeriod(31556926);
+		}
 	}
 
 	@Override
