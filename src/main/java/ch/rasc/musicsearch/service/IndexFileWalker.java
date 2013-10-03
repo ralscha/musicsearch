@@ -37,7 +37,7 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 	private final IndexWriter writer;
 
 	private final Path baseDir;
-	
+
 	private final Set<String> artists;
 
 	public IndexFileWalker(IndexWriter writer, Path baseDir) {

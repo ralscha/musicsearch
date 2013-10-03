@@ -82,7 +82,7 @@ public class SearchService {
 
 		return info;
 	}
-	
+
 	@ExtDirectMethod(value = ExtDirectMethodType.STORE_READ)
 	public List<Artist> readArtists() throws IOException {
 		Path artistsFile = Paths.get(environement.getProperty("indexDir"), "artists.txt");

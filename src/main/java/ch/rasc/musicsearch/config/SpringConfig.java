@@ -23,7 +23,7 @@ public class SpringConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired
 	private Environment environment;
-	
+
 	public SpringConfig() {
 		SLF4JBridgeHandler.removeHandlersForRootLogger();
 		SLF4JBridgeHandler.install();
@@ -33,10 +33,11 @@ public class SpringConfig extends WebMvcConfigurerAdapter {
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
 		configurer.enable();
 	}
-	
+
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		ResourceHandlerRegistration registration = registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+		ResourceHandlerRegistration registration = registry.addResourceHandler("/resources/**").addResourceLocations(
+				"/resources/");
 		if (environment.acceptsProfiles("production")) {
 			registration.setCachePeriod(31556926);
 		}

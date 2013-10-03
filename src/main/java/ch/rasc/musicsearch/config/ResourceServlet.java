@@ -1,4 +1,4 @@
-package ch.rasc.musicsearch.web;
+package ch.rasc.musicsearch.config;
 
 import java.io.IOException;
 
@@ -19,7 +19,7 @@ public class ResourceServlet extends HttpServlet {
 	private final String contentType;
 
 	private final String etag;
-	
+
 	private final Integer cacheInMonths;
 
 	public ResourceServlet(final byte[] data, final String etag, final Integer cacheInMonths, final String contentType) {

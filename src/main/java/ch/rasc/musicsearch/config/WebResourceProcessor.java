@@ -17,6 +17,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -32,8 +33,6 @@ import org.mozilla.javascript.ErrorReporter;
 import org.mozilla.javascript.EvaluatorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import ch.rasc.musicsearch.web.ResourceServlet;
 
 import com.yahoo.platform.yui.compressor.CssCompressor;
 import com.yahoo.platform.yui.compressor.JavaScriptCompressor;
@@ -55,8 +54,12 @@ public class WebResourceProcessor {
 	private final static Pattern DEV_CODE_PATTERN = Pattern.compile("/\\* <debug> \\*/.*?/\\* </debug> \\*/",
 			Pattern.DOTALL);
 
-	private final static Pattern CSS_URL_PATTERN = Pattern.compile("(.*?url.*?\\('*)([^\\)']*)('*\\))",
+	private final static Pattern CSS_URL_PATTERN = Pattern.compile("(.*?url.*?\\(\\s*'?)(.*?)('?\\s*\\))",
 			Pattern.CASE_INSENSITIVE);
+
+	private final static String REQUIRES_PATTERN = "(?i)requires.*?:.*?\\[.*?\\].*?,";
+
+	private final static String USES_PATTERN = "(?i)uses.*?:.*?\\[.*?\\].*?,";
 
 	private final static String JAVASCRIPT_TAG = "<script src=\"%s\"></script>";
 
@@ -131,6 +134,7 @@ public class WebResourceProcessor {
 		List<String> webResourceLines = readAllLinesFromWebResourceConfigFile();
 
 		String varName = null;
+		Set<String> processedResource = new HashSet<>();
 
 		for (String webResourceLine : webResourceLines) {
 			String line = webResourceLine.trim();
@@ -142,6 +146,7 @@ public class WebResourceProcessor {
 				varName = line.substring(0, line.length() - 1);
 				scriptAndLinkTags.put(varName, new StringBuilder());
 				sourceCodes.put(varName, new StringBuilder());
+				processedResource.clear();
 				continue;
 			}
 
@@ -166,15 +171,18 @@ public class WebResourceProcessor {
 				} else {
 					boolean jsProcessing = varName.endsWith(JS_EXTENSION);
 					for (String resource : enumerateResources(container, line, jsProcessing ? ".js" : ".css")) {
-						try (InputStream lis = container.getResourceAsStream(resource)) {
-							String sourcecode = inputStream2String(lis, StandardCharsets.UTF_8);
-							if (jsProcessing) {
-								sourceCodes.get(varName).append(minifyJs(cleanCode(sourcecode))).append('\n');
-							} else {
-								sourceCodes.get(varName).append(compressCss(changeImageUrls(sourcecode, line)));
+						if (!processedResource.contains(resource)) {
+							processedResource.add(resource);
+							try (InputStream lis = container.getResourceAsStream(resource)) {
+								String sourcecode = inputStream2String(lis, StandardCharsets.UTF_8);
+								if (jsProcessing) {
+									sourceCodes.get(varName).append(minifyJs(cleanCode(sourcecode))).append('\n');
+								} else {
+									sourceCodes.get(varName).append(compressCss(changeImageUrls(sourcecode, line)));
+								}
+							} catch (IOException ioe) {
+								logger.error("web resource processing: " + line, ioe);
 							}
-						} catch (IOException ioe) {
-							logger.error("web resource processing: " + line, ioe);
 						}
 					}
 				}
@@ -245,7 +253,8 @@ public class WebResourceProcessor {
 			matcher.appendReplacement(cleanCode, "");
 		}
 		matcher.appendTail(cleanCode);
-		return cleanCode.toString();
+
+		return cleanCode.toString().replaceAll(REQUIRES_PATTERN, "").replaceAll(USES_PATTERN, "");
 	}
 
 	private List<String> readAllLinesFromWebResourceConfigFile() {
