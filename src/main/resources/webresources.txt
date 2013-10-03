@@ -13,7 +13,6 @@ app_js:
   /loader.js[d]
   /api.js[d]
   /api-{application.version}.js[ps]
-  /resources/extjs-gpl/{extjs.version}/ux/form/field/ClearCombo.js
   /resources/extjs-gpl/{extjs.version}/ux/form/field/FilterField.js  
   /direct.js[dp]
   /app/model/
@@ -24,5 +23,5 @@ app_js:
   /resources/detect.js[dp]
 
 app_css:
-  /resources/extjs/{extjs.version}/ext-theme-steelblue-all.css[dp]
+  /resources/extjs/4.2.1/ext-theme-steelblue-all.css[dp]
   /resources/css/app.css[dp]
