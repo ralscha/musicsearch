@@ -339,6 +339,28 @@
 				</executions>
 			</plugin>
 
+			<plugin>
+				<groupId>ch.rasc</groupId>
+				<artifactId>embeddedtc-maven-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>package-tcwar</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<finalName>musicsearch.jar</finalName>
+					<extraDependencies>
+						<dependency>
+							<groupId>mysql</groupId>
+							<artifactId>mysql-connector-java</artifactId>
+							<version>5.1.26</version>
+						</dependency>
+					</extraDependencies>
+				</configuration>
+			</plugin>
 		</plugins>
 
 	</build>
