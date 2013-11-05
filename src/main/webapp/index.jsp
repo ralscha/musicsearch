@@ -3,7 +3,6 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>MusicSearch</title>
   <link rel="icon" type="image/png" href="resources/images/favicon16.png" sizes="16x16">
   <link rel="icon" type="image/png" href="resources/images/favicon32.png" sizes="32x32">
