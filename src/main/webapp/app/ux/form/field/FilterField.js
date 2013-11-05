@@ -1,4 +1,4 @@
-Ext.define('Ext.ux.form.field.FilterField', {
+Ext.define('MusicSearch.ux.form.field.FilterField', {
 	extend: 'Ext.form.field.Trigger',
 	alias: 'widget.filterfield',
 	
@@ -7,7 +7,7 @@ Ext.define('Ext.ux.form.field.FilterField', {
 
 	initComponent: function() {
 		this.on('specialkey', function(f, e) {
-			if (e.getKey() == e.ENTER) {
+			if (e.getKey() === e.ENTER) {
 				this.fireEvent('filter', this, this.getValue());
 			}
 		}, this);
