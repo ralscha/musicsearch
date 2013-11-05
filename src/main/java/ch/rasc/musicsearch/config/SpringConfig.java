@@ -18,7 +18,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @Configuration
 @ComponentScan(basePackages = { "ch.ralscha.extdirectspring", "ch.rasc.musicsearch" })
 @EnableWebMvc
-@PropertySource({ "version.properties" })
+@PropertySource("classpath:version.properties")
 public class SpringConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired
@@ -52,7 +52,6 @@ public class SpringConfig extends WebMvcConfigurerAdapter {
 	@Bean
 	public InternalResourceViewResolver viewResolver() {
 		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-		resolver.setPrefix("/WEB-INF/jsp/");
 		resolver.setSuffix(".jsp");
 		return resolver;
 	}
