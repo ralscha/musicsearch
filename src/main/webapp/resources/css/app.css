@@ -5,3 +5,7 @@
 .playlist-playing-row > td {
 	font-weight: bold !important;
 }
+
+.x-btn-glyph {
+	color:black !important;
+}

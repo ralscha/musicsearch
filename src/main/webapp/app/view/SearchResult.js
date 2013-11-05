@@ -4,7 +4,7 @@ Ext.define('MusicSearch.view.SearchResult', {
 	controller: 'MusicSearch.controller.SearchResultController',
 	title: 'Search Music',
 	
-	requires: [ 'Ext.ux.form.field.FilterField' ],
+	requires: [ 'MusicSearch.ux.form.field.FilterField' ],
 	
 	multiSelect: true,
 
@@ -77,17 +77,17 @@ Ext.define('MusicSearch.view.SearchResult', {
 				xtype: 'button',
 				text: 'Add All to Playlist',
 				itemId: 'addAllButton',
-				icon: app_context_path + '/resources/images/navigate_plus.png'
+				glyph: 0xe800
 			},{
 				xtype: 'button',
 				text: 'Add Selected to Playlist',
 				disabled: true,
 				itemId: 'addSelectedButton',
-				icon: app_context_path + '/resources/images/navigate_plus.png'
+				glyph: 0xe800
 			}, {
 				xtype: 'button',
 				text: 'Download Selected',
-				icon: app_context_path + '/resources/images/download.png',
+				glyph: 0xe808,
 				disabled: true,
 				href: app_context_path + '/downloadMusicZip',
 				hrefTarget: '_self',

@@ -64,46 +64,46 @@ Ext.define('MusicSearch.view.Playlist', {
 				xtype: 'button',
 				tooltip: 'Play',
 				disabled: true,
-				icon: app_context_path + '/resources/images/media_play.png',
+				glyph: 0xe801,
 				itemId: 'playButton'
 			}, {
 				xtype: 'button',
 				tooltip: 'Pause',
 				disabled: true,
-				icon: app_context_path + '/resources/images/media_pause.png',
+				glyph: 0xe802,
 				enableToggle: true,
 				itemId: 'pauseButton'
 			}, {
 				xtype: 'button',
 				tooltip: 'Stop',
 				disabled: true,
-				icon: app_context_path + '/resources/images/media_stop.png',
+				glyph: 0xe803,
 				itemId: 'stopButton'
 			}, {
 				xtype: 'button',
 				tooltip: 'Previous',
 				disabled: true,
-				icon: app_context_path + '/resources/images/media_step_back.png',
+				glyph: 0xe805,
 				itemId: 'prevButton'
 			}, {
 				xtype: 'button',
 				tooltip: 'Next',
 				disabled: true,
-				icon: app_context_path + '/resources/images/media_step_forward.png',
+				glyph: 0xe804,
 				itemId: 'nextButton'
 			}, '-', {
 				xtype: 'button',
 				text: 'Remove',
 				tooltip: 'Remove from playlist',
 				disabled: true,
-				icon: app_context_path + '/resources/images/navigate_minus.png',
+				glyph: 0xe806,
 				itemId: 'removeButton'
 			}, {
 				xtype: 'button',
 				text: 'Clear',
 				tooltip: 'Clear playlist',
 				disabled: true,
-				icon: app_context_path + '/resources/images/eraser.png',
+				glyph: 0xe809,
 				itemId: 'clearButton'
 			}, '-', {
 				xtype: 'slider',
@@ -120,7 +120,7 @@ Ext.define('MusicSearch.view.Playlist', {
 				xtype: 'button',
 				text: 'Download',
 				tooltip: 'Download Playlist',
-				icon: app_context_path + '/resources/images/download.png',
+				glyph: 0xe808,
 				disabled: true,
 				href: app_context_path + '/downloadMusicZip',
 				hrefTarget: '_self',
@@ -139,9 +139,7 @@ Ext.define('MusicSearch.view.Playlist', {
 				vertical: true
 			}, {
 				xtype: 'image',
-				src: app_context_path + '/resources/images/loudspeaker.png',
-				height: 24,
-				width: 24
+				glyph: 0xe80a
 			} ]
 
 		} ];

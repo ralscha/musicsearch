@@ -1,7 +1,7 @@
 Ext.define('MusicSearch.view.Viewport', {
 	extend: 'Ext.Viewport',
 	layout: 'border',	
-
+	requires: ['MusicSearch.view.Artists', 'MusicSearch.view.SearchResult', 'MusicSearch.view.Playlist'],
 	initComponent: function() {
 		this.items = [ Ext.create('MusicSearch.view.Artists', {
 			region: 'west',
