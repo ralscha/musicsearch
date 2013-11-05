@@ -7,14 +7,13 @@
 app_js:
   /resources/extjs-gpl/{extjs.version}/ext-all-dev.js[d]
   /resources/extjs-gpl/{extjs.version}/ext-all.js[ps]
+  /overrides/
   /resources/soundmanager2-nodebug-jsmin.js[dp]
   /resources/deft-debug.js[d]
   /resources/deft.js
-  /loader.js[d]
-  /api.js[d]
-  /api-{application.version}.js[ps]
-  /resources/extjs-gpl/{extjs.version}/ux/form/field/FilterField.js  
-  /direct.js[dp]
+  /api.js?apiNs=[d]
+  /api-{application.version}.js?apiNs=[ps]
+  /app/ux/  
   /app/model/
   /app/store/
   /app/controller/
@@ -24,4 +23,5 @@ app_js:
 
 app_css:
   /resources/extjs/4.2.1/ext-theme-steelblue-all.css[dp]
+  /resources/fontello/css/fontello.css[dp]
   /resources/css/app.css[dp]

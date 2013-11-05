@@ -1,43 +1,21 @@
-Ext.define('App.overrides.view.Table', {
-    override: 'Ext.view.Table',
-
-
-    getRecord: function (node) {
-        node = this.getNode(node);
-        if (node) {
-            //var recordIndex = node.getAttribute('data-recordIndex');
-            //if (recordIndex) {
-            //    recordIndex = parseInt(recordIndex, 10);
-            //    if (recordIndex > -1) {
-            //        // The index is the index in the original Store, not in a GroupStore
-            //        // The Grouping Feature increments the index to skip over unrendered records in collapsed groups
-            //        return this.store.data.getAt(recordIndex);
-            //    }
-            //}
-            return this.dataSource.data.get(node.getAttribute('data-recordId'));
-        }
-    },
-
-
-    indexInStore: function (node) {
-        node = this.getNode(node, true);
-        if (!node && node !== 0) {
-            return -1;
-        }
-        //var recordIndex = node.getAttribute('data-recordIndex');
-        //if (recordIndex) {
-        //    return parseInt(recordIndex, 10);
-        //}
-        return this.dataSource.indexOf(this.getRecord(node));
-    }
+/* <debug> */
+Ext.Loader.setConfig({
+	enabled: true,
+	paths: {
+		'MusicSearch': 'app',
+		'Ext.ux': 'resources/extjs-gpl/4.2.2/ux'
+	}
 });
+/* </debug> */
 
 Ext.define('MusicSearch.App', {
 	extend: 'Deft.mvc.Application',
-
+	requires: [ 'overrides.AbstractMixedCollection', 'MusicSearch.store.SongsStore', 'MusicSearch.store.PlaylistStore', 'MusicSearch.store.ArtistsStore',
+			'MusicSearch.view.Viewport' ],
 	init: function() {
 		Ext.fly('followingBallsG').destroy();
-
+		Ext.setGlyphFontFamily('fontello');
+		Ext.direct.Manager.addProvider(REMOTING_API);
 		Ext.tip.QuickTipManager.init();
 
 		Deft.Injector.configure({
@@ -57,9 +35,7 @@ MusicSearch.Utils.secondsToHms = function(d) {
 	var h = Math.floor(no / 3600);
 	var m = Math.floor(no % 3600 / 60);
 	var s = Math.floor(no % 3600 % 60);
-	return ((h > 0 ? h + ":" : "")
-			+ (m > 0 ? (h > 0 && m < 10 ? "0" : "") + m + ":" : "00:")
-			+ (s < 10 ? "0" : "") + s);
+	return ((h > 0 ? h + ":" : "") + (m > 0 ? (h > 0 && m < 10 ? "0" : "") + m + ":" : "00:") + (s < 10 ? "0" : "") + s);
 };
 
 soundManager.setup({
