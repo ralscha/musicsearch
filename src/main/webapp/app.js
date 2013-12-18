@@ -15,7 +15,7 @@ Ext.define('MusicSearch.App', {
 	init: function() {
 		Ext.fly('followingBallsG').destroy();
 		Ext.setGlyphFontFamily('fontello');
-		Ext.direct.Manager.addProvider(REMOTING_API);
+		Ext.direct.Manager.addProvider(Ext.app.REMOTING_API);
 		Ext.tip.QuickTipManager.init();
 
 		Deft.Injector.configure({

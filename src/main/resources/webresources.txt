@@ -11,8 +11,8 @@ app_js:
   /resources/soundmanager2-nodebug-jsmin.js[dp]
   /resources/deft-debug.js[d]
   /resources/deft.js
-  /api.js?apiNs=[d]
-  /api-{application.version}.js?apiNs=[ps]
+  /api.js[d]
+  /api-{application.version}.js[ps]
   /app/ux/  
   /app/model/
   /app/store/
