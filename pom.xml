@@ -43,7 +43,7 @@
 		<dependency>
 			<groupId>ch.rasc</groupId>
 			<artifactId>edsutil</artifactId>
-			<version>1.0.5</version>
+			<version>1.0.10</version>
 		</dependency>
 
 		<dependency>
@@ -375,7 +375,7 @@
 						<dependency>
 							<groupId>mysql</groupId>
 							<artifactId>mysql-connector-java</artifactId>
-							<version>5.1.27</version>
+							<version>5.1.28</version>
 						</dependency>
 					</extraDependencies>
 				</configuration>

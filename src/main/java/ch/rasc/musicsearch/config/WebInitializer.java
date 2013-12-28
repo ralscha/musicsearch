@@ -30,8 +30,8 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
 			}
 		}
 
-		WebResourceProcessor processor = new WebResourceProcessor(!"development".equals(profile));
-		processor.process(servletContext);
+		WebResourceProcessor processor = new WebResourceProcessor(servletContext, !"development".equals(profile));
+		processor.process();
 
 		servletContext.setInitParameter("spring.profiles.default", "production");
 
