@@ -79,8 +79,8 @@ public class IndexService {
 		Path musicDir = Paths.get(environement.getProperty("musicDir"));
 
 		try (Directory dir = FSDirectory.open(ixDir.toFile());
-				Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_46)) {
-			IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_46, analyzer);
+				Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_47)) {
+			IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_47, analyzer);
 			iwc.setOpenMode(OpenMode.CREATE_OR_APPEND);
 
 			IndexFileWalker walker = null;
