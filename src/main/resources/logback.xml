@@ -2,17 +2,8 @@
 <!DOCTYPE configuration>
 <configuration debug="false">
   
-  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder>
-      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-    </encoder>   
-  </appender>
-
+  <include resource="org/springframework/boot/logging/logback/base.xml"/>
   <logger name="org.jaudiotagger" level="ERROR" />
-  <logger name="ch.rasc" level="ERROR" />
-
-  <root level="ERROR">    
-    <appender-ref ref="STDOUT" />
-  </root>  
+  <logger name="ch.rasc.musicsearch" level="INFO" />
    
 </configuration>

@@ -14,22 +14,26 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.lucene.document.Document;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import ch.rasc.musicsearch.AppConfig;
 import ch.rasc.musicsearch.service.IndexService;
 
 @Controller
 public class DownloadMusicZipController {
 
-	@Autowired
-	private Environment environement;
+	private final AppConfig appConfig;
+
+	private final IndexService indexService;
 
 	@Autowired
-	private IndexService indexService;
+	public DownloadMusicZipController(AppConfig appConfig, IndexService indexService) {
+		this.appConfig = appConfig;
+		this.indexService = indexService;
+	}
 
 	@RequestMapping("/downloadMusicZip")
 	public void export(@RequestParam(value = "sf", required = true) String selectedMusicIds,
@@ -50,8 +54,7 @@ public class DownloadMusicZipController {
 
 					if (doc != null) {
 
-						Path musicFile = Paths.get(environement.getProperty("musicDir"), doc.get("directory"),
-								doc.get("fileName"));
+						Path musicFile = Paths.get(appConfig.getMusicDir(), doc.get("directory"), doc.get("fileName"));
 						ZipEntry entry = new ZipEntry(musicFile.getFileName().toString());
 						entry.setTime(System.currentTimeMillis());
 						zip.putNextEntry(entry);

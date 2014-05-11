@@ -6,37 +6,30 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.lucene.document.Document;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import ch.rasc.musicsearch.AppConfig;
 import ch.rasc.musicsearch.service.IndexService;
 
 @Controller
 public class DownloadMusicController {
 
-	@Autowired
-	private Environment environement;
+	private final AppConfig appConfig;
+
+	private final IndexService indexService;
 
 	@Autowired
-	private IndexService indexService;
-
-	private String nginxSendFileContext;
-
-	private boolean apacheSendFile;
-
-	@PostConstruct
-	public void init() {
-		nginxSendFileContext = environement.getProperty("nginxSendFileContext");
-		apacheSendFile = environement.getProperty("apacheSendFile", Boolean.class, false);
+	public DownloadMusicController(AppConfig appConfig, IndexService indexService) {
+		this.appConfig = appConfig;
+		this.indexService = indexService;
 	}
 
 	@RequestMapping(value = "/downloadMusic", method = RequestMethod.GET)
@@ -47,16 +40,17 @@ public class DownloadMusicController {
 
 		if (doc != null) {
 
-			Path musicFile = Paths.get(environement.getProperty("musicDir"), doc.get("directory"), doc.get("fileName"));
+			Path musicFile = Paths.get(appConfig.getMusicDir(), doc.get("directory"), doc.get("fileName"));
 
 			String contentType = Files.probeContentType(musicFile);
 			response.setContentType(contentType);
 			long fileSize = Files.size(musicFile);
 
-			if (nginxSendFileContext != null) {
-				String redirectUrl = nginxSendFileContext + "/" + doc.get("directory") + "/" + doc.get("fileName");
+			if (appConfig.getNginxSendFileContext() != null) {
+				String redirectUrl = appConfig.getNginxSendFileContext() + "/" + doc.get("directory") + "/"
+						+ doc.get("fileName");
 				response.setHeader("X-Accel-Redirect", redirectUrl);
-			} else if (apacheSendFile) {
+			} else if (appConfig.isApacheSendFile()) {
 				response.setHeader("X-SendFile", musicFile.toAbsolutePath().toString());
 			} else if (Boolean.TRUE.equals(request.getAttribute("org.apache.tomcat.sendfile.support"))) {
 				long startAt = 0;
@@ -74,7 +68,7 @@ public class DownloadMusicController {
 					}
 
 					response.setHeader("Content-Range", String.format("bytes %d-%d/%d", startAt, end, fileSize));
-					long dataToWrite = (end + 1) - startAt;
+					long dataToWrite = end + 1 - startAt;
 					response.setContentLength((int) dataToWrite);
 				} else {
 					response.setContentLength((int) fileSize);

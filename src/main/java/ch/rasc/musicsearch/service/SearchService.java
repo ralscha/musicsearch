@@ -1,7 +1,6 @@
 package ch.rasc.musicsearch.service;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -11,9 +10,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -25,8 +23,9 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.util.Version;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -34,6 +33,7 @@ import ch.ralscha.extdirectspring.annotation.ExtDirectMethod;
 import ch.ralscha.extdirectspring.annotation.ExtDirectMethodType;
 import ch.ralscha.extdirectspring.bean.ExtDirectStoreReadRequest;
 import ch.ralscha.extdirectspring.filter.StringFilter;
+import ch.rasc.musicsearch.AppConfig;
 import ch.rasc.musicsearch.model.Artist;
 import ch.rasc.musicsearch.model.Info;
 import ch.rasc.musicsearch.model.Song;
@@ -41,58 +41,60 @@ import ch.rasc.musicsearch.model.Song;
 @Service
 public class SearchService {
 
-	private static final Log logger = LogFactory.getLog(SearchService.class);
+	public static final String NO_OF_SONGS = "noOfSongs";
 
-	private final static String[] FIELDS = { "fileName", "directory", "title", "artist", "album", "comment", "year",
-			"composer" };
+	public static final String TOTAL_DURATION = "totalDuration";
+
+	private static final Logger logger = LoggerFactory.getLogger(SearchService.class);
+
+	private final static String[] QUERY_FIELDS = { "fileName", "directory", "title", "artist", "album", "comment",
+			"year", "composer" };
+
+	private final AppConfig appConfig;
+
+	private final IndexService indexService;
 
 	@Autowired
-	private Environment environement;
-
-	@Autowired
-	private IndexService indexService;
+	public SearchService(AppConfig appConfig, IndexService indexService) {
+		this.appConfig = appConfig;
+		this.indexService = indexService;
+	}
 
 	@ExtDirectMethod
 	public Info getInfo() {
 
-		Info info = new Info();
+		Integer noOfSongs = null;
+		Integer totalDuration = null;
+
 		try {
-			Path infoFile = Paths.get(environement.getProperty("indexDir"), "info.properties");
+			Path infoFile = Paths.get(appConfig.getIndexDir(), "info.properties");
 			Properties properties;
 			try (BufferedReader br = Files.newBufferedReader(infoFile, StandardCharsets.UTF_8)) {
 				properties = new Properties();
 				properties.load(br);
 			}
 
-			String totalDurationString = (String) properties.get("totalDuration");
-			String noOfSongsString = (String) properties.get("noOfSongs");
+			String totalDurationString = (String) properties.get(SearchService.TOTAL_DURATION);
+			String noOfSongsString = (String) properties.get(SearchService.NO_OF_SONGS);
 
 			if (StringUtils.hasText(totalDurationString)) {
-				info.setTotalDuration(Integer.valueOf(totalDurationString));
+				totalDuration = Integer.valueOf(totalDurationString);
 			}
 			if (StringUtils.hasText(noOfSongsString)) {
-				info.setNoOfSongs(Integer.valueOf(noOfSongsString));
+				noOfSongs = Integer.valueOf(noOfSongsString);
 			}
 
-		} catch (FileNotFoundException e) {
-			logger.error("getInfo", e);
 		} catch (IOException e) {
 			logger.error("getInfo", e);
 		}
 
-		return info;
+		return new Info(noOfSongs, totalDuration);
 	}
 
 	@ExtDirectMethod(value = ExtDirectMethodType.STORE_READ)
 	public List<Artist> readArtists() throws IOException {
-		Path artistsFile = Paths.get(environement.getProperty("indexDir"), "artists.txt");
-		List<String> artists = Files.readAllLines(artistsFile, StandardCharsets.UTF_8);
-
-		List<Artist> artistsList = new ArrayList<>();
-		for (String artist : artists) {
-			artistsList.add(new Artist(artist));
-		}
-		return artistsList;
+		Path artistsFile = Paths.get(appConfig.getIndexDir(), "artists.txt");
+		return Files.lines(artistsFile, StandardCharsets.UTF_8).map(Artist::new).collect(Collectors.toList());
 	}
 
 	@ExtDirectMethod(value = ExtDirectMethodType.STORE_READ)
@@ -106,9 +108,9 @@ public class SearchService {
 
 		List<Song> resultList = new ArrayList<>();
 
-		try (Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_47)) {
+		try (Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_48)) {
 
-			MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_47, FIELDS, analyzer);
+			MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_48, QUERY_FIELDS, analyzer);
 			parser.setDefaultOperator(QueryParserBase.AND_OPERATOR);
 			parser.setAllowLeadingWildcard(true);
 

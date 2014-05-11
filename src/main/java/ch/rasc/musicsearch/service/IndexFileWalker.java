@@ -26,9 +26,13 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 public class IndexFileWalker extends SimpleFileVisitor<Path> {
+
+	private static final Logger logger = LoggerFactory.getLogger(IndexFileWalker.class);
 
 	private long totalDuration = 0;
 
@@ -76,7 +80,7 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 			} else if ("aac".equals(encodingType)) {
 				encoding = "audio/aac";
 			} else {
-				System.out.println("NOT FOUND: " + encodingType);
+				logger.info("Encoding type {} not found", encodingType);
 			}
 
 			doc.add(new StoredField("encoding", encoding));

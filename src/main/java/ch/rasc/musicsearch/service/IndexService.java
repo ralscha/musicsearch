@@ -8,7 +8,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -23,27 +22,28 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+
+import ch.rasc.musicsearch.AppConfig;
 
 @Service
 public class IndexService {
 
-	private Directory indexDirectory;
+	private final Directory indexDirectory;
 
-	private IndexReader indexReader;
+	private final IndexReader indexReader;
 
-	private IndexSearcher indexSearcher;
+	private final IndexSearcher indexSearcher;
+
+	private final AppConfig appConfig;
 
 	@Autowired
-	private Environment environement;
+	public IndexService(AppConfig appConfig) throws IOException {
+		this.appConfig = appConfig;
 
-	@PostConstruct
-	public void init() throws IOException {
+		Path ixDir = Paths.get(appConfig.getIndexDir());
 
-		Path ixDir = Paths.get(environement.getProperty("indexDir"));
-
-		if (!Files.exists(ixDir)) {
+		if (!Files.exists(ixDir) || !Files.list(ixDir).findFirst().isPresent()) {
 			indexMusic(ixDir);
 		}
 
@@ -76,11 +76,11 @@ public class IndexService {
 
 	private void indexMusic(Path ixDir) throws IOException {
 
-		Path musicDir = Paths.get(environement.getProperty("musicDir"));
+		Path musicDir = Paths.get(appConfig.getMusicDir());
 
 		try (Directory dir = FSDirectory.open(ixDir.toFile());
-				Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_47)) {
-			IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_47, analyzer);
+				Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_48)) {
+			IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_48, analyzer);
 			iwc.setOpenMode(OpenMode.CREATE_OR_APPEND);
 
 			IndexFileWalker walker = null;
@@ -95,8 +95,8 @@ public class IndexService {
 			Path infoFile = ixDir.resolve("info.properties");
 			try (BufferedWriter bw = Files.newBufferedWriter(infoFile, StandardCharsets.UTF_8)) {
 				Properties properties = new Properties();
-				properties.put("totalDuration", String.valueOf(walker.getTotalDuration()));
-				properties.put("noOfSongs", String.valueOf(walker.getNoOfSongs()));
+				properties.put(SearchService.TOTAL_DURATION, String.valueOf(walker.getTotalDuration()));
+				properties.put(SearchService.NO_OF_SONGS, String.valueOf(walker.getNoOfSongs()));
 				properties.store(bw, "dbinfo");
 			}
 

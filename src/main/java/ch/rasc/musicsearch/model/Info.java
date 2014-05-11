@@ -2,24 +2,21 @@ package ch.rasc.musicsearch.model;
 
 public class Info {
 
-	private Integer noOfSongs;
+	private final Integer noOfSongs;
 
-	private Integer totalDuration;
+	private final Integer totalDuration;
+
+	public Info(Integer noOfSongs, Integer totalDuration) {
+		this.noOfSongs = noOfSongs;
+		this.totalDuration = totalDuration;
+	}
 
 	public Integer getNoOfSongs() {
 		return noOfSongs;
 	}
 
-	public void setNoOfSongs(Integer noOfSongs) {
-		this.noOfSongs = noOfSongs;
-	}
-
 	public Integer getTotalDuration() {
 		return totalDuration;
-	}
-
-	public void setTotalDuration(Integer totalDuration) {
-		this.totalDuration = totalDuration;
 	}
 
 }
