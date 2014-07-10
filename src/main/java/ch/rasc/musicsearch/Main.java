@@ -41,9 +41,8 @@ public class Main extends SpringBootServletInitializer {
 	public ServletContextInitializer servletContextInitializer(final Environment environment) {
 		return servletContext -> {
 			try {
-
 				WebResourceProcessor processor = new WebResourceProcessor(servletContext,
-						environment.acceptsProfiles("production"), "/static");
+						environment.acceptsProfiles("production"));
 				processor.process();
 
 				ClassPathResource cpr = new ClassPathResource("/index.html");

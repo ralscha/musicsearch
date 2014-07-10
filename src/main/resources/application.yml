@@ -17,6 +17,5 @@ spring:
     cachePeriod: 31556926  
       
 app:
-  musicDir: /opt/music
-  indexDir: /opt/music_index
-  nginxSendFileContext: /musiclib
+  musicDir: E:/music
+  indexDir: E:/music_index
