@@ -36,7 +36,8 @@ public class DownloadMusicZipController {
 	}
 
 	@RequestMapping("/downloadMusicZip")
-	public void export(@RequestParam(value = "sf", required = true) String selectedMusicIds,
+	public void export(
+			@RequestParam(value = "sf", required = true) String selectedMusicIds,
 			HttpServletResponse response) throws IOException {
 
 		if (StringUtils.hasText(selectedMusicIds)) {
@@ -50,11 +51,13 @@ public class DownloadMusicZipController {
 				zip.setLevel(Deflater.NO_COMPRESSION);
 
 				for (String id : selectedMusicIds.split(",")) {
-					Document doc = indexService.getIndexSearcher().doc(Integer.valueOf(id));
+					Document doc = indexService.getIndexSearcher().doc(
+							Integer.parseInt(id));
 
 					if (doc != null) {
 
-						Path musicFile = Paths.get(appConfig.getMusicDir(), doc.get("directory"), doc.get("fileName"));
+						Path musicFile = Paths.get(appConfig.getMusicDir(),
+								doc.get("directory"), doc.get("fileName"));
 						ZipEntry entry = new ZipEntry(musicFile.getFileName().toString());
 						entry.setTime(System.currentTimeMillis());
 						zip.putNextEntry(entry);

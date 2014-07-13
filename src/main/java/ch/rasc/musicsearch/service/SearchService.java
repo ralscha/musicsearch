@@ -47,8 +47,8 @@ public class SearchService {
 
 	private static final Logger logger = LoggerFactory.getLogger(SearchService.class);
 
-	private final static String[] QUERY_FIELDS = { "fileName", "directory", "title", "artist", "album", "comment",
-			"year", "composer" };
+	private final static String[] QUERY_FIELDS = { "fileName", "directory", "title",
+			"artist", "album", "comment", "year", "composer" };
 
 	private final AppConfig appConfig;
 
@@ -69,12 +69,14 @@ public class SearchService {
 		try {
 			Path infoFile = Paths.get(appConfig.getIndexDir(), "info.properties");
 			Properties properties;
-			try (BufferedReader br = Files.newBufferedReader(infoFile, StandardCharsets.UTF_8)) {
+			try (BufferedReader br = Files.newBufferedReader(infoFile,
+					StandardCharsets.UTF_8)) {
 				properties = new Properties();
 				properties.load(br);
 			}
 
-			String totalDurationString = (String) properties.get(SearchService.TOTAL_DURATION);
+			String totalDurationString = (String) properties
+					.get(SearchService.TOTAL_DURATION);
 			String noOfSongsString = (String) properties.get(SearchService.NO_OF_SONGS);
 
 			if (StringUtils.hasText(totalDurationString)) {
@@ -84,7 +86,8 @@ public class SearchService {
 				noOfSongs = Integer.valueOf(noOfSongsString);
 			}
 
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			logger.error("getInfo", e);
 		}
 
@@ -94,7 +97,8 @@ public class SearchService {
 	@ExtDirectMethod(value = ExtDirectMethodType.STORE_READ)
 	public List<Artist> readArtists() throws IOException {
 		Path artistsFile = Paths.get(appConfig.getIndexDir(), "artists.txt");
-		return Files.lines(artistsFile, StandardCharsets.UTF_8).map(Artist::new).collect(Collectors.toList());
+		return Files.lines(artistsFile, StandardCharsets.UTF_8).map(Artist::new)
+				.collect(Collectors.toList());
 	}
 
 	@ExtDirectMethod(value = ExtDirectMethodType.STORE_READ)
@@ -102,7 +106,8 @@ public class SearchService {
 
 		String filterValue = null;
 		if (!storeRequest.getFilters().isEmpty()) {
-			StringFilter filter = (StringFilter) storeRequest.getFilters().iterator().next();
+			StringFilter filter = (StringFilter) storeRequest.getFilters().iterator()
+					.next();
 			filterValue = filter.getValue();
 		}
 
@@ -110,17 +115,20 @@ public class SearchService {
 
 		try (Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_4_9)) {
 
-			MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_4_9, QUERY_FIELDS, analyzer);
+			MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_4_9,
+					QUERY_FIELDS, analyzer);
 			parser.setDefaultOperator(QueryParserBase.AND_OPERATOR);
 			parser.setAllowLeadingWildcard(true);
 
 			Query query;
 			try {
 				query = parser.parse(filterValue);
-			} catch (ParseException e) {
+			}
+			catch (ParseException e) {
 				try {
 					query = parser.parse(QueryParserBase.escape(filterValue));
-				} catch (ParseException e1) {
+				}
+				catch (ParseException e1) {
 					logger.error("lucene query parse", e1);
 					return Collections.emptyList();
 				}
@@ -140,7 +148,8 @@ public class SearchService {
 
 				song.setEncoding(doc.get("encoding"));
 
-				if (!StringUtils.hasText(song.getArtist()) && !StringUtils.hasText(song.getAlbum())
+				if (!StringUtils.hasText(song.getArtist())
+						&& !StringUtils.hasText(song.getAlbum())
 						&& !StringUtils.hasText(song.getTitle())) {
 					song.setTitle(doc.get("fileName"));
 				}
@@ -148,14 +157,16 @@ public class SearchService {
 				IndexableField field = doc.getField("duration");
 				if (field != null) {
 					song.setDurationInSeconds(field.numericValue().intValue());
-				} else {
+				}
+				else {
 					song.setDurationInSeconds(null);
 				}
 
 				field = doc.getField("bitrate");
 				if (field != null) {
 					song.setBitrate(field.numericValue().longValue());
-				} else {
+				}
+				else {
 					song.setBitrate(null);
 				}
 
@@ -163,7 +174,8 @@ public class SearchService {
 
 			}
 
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			logger.error("search service", e);
 		}
 

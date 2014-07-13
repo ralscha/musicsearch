@@ -57,14 +57,16 @@ public class IndexService {
 		if (indexReader != null) {
 			try {
 				indexReader.close();
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				// ignore exception
 			}
 		}
 		if (indexDirectory != null) {
 			try {
 				indexDirectory.close();
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				// ignore exception
 			}
 		}
@@ -93,15 +95,19 @@ public class IndexService {
 			}
 
 			Path infoFile = ixDir.resolve("info.properties");
-			try (BufferedWriter bw = Files.newBufferedWriter(infoFile, StandardCharsets.UTF_8)) {
+			try (BufferedWriter bw = Files.newBufferedWriter(infoFile,
+					StandardCharsets.UTF_8)) {
 				Properties properties = new Properties();
-				properties.put(SearchService.TOTAL_DURATION, String.valueOf(walker.getTotalDuration()));
-				properties.put(SearchService.NO_OF_SONGS, String.valueOf(walker.getNoOfSongs()));
+				properties.put(SearchService.TOTAL_DURATION,
+						String.valueOf(walker.getTotalDuration()));
+				properties.put(SearchService.NO_OF_SONGS,
+						String.valueOf(walker.getNoOfSongs()));
 				properties.store(bw, "dbinfo");
 			}
 
 			Path artistsFile = ixDir.resolve("artists.txt");
-			try (BufferedWriter bw = Files.newBufferedWriter(artistsFile, StandardCharsets.UTF_8)) {
+			try (BufferedWriter bw = Files.newBufferedWriter(artistsFile,
+					StandardCharsets.UTF_8)) {
 				for (String artist : walker.getArtists()) {
 					bw.write(artist);
 					bw.write("\n");

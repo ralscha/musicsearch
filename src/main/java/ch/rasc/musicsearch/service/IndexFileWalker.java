@@ -51,7 +51,8 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 	}
 
 	@Override
-	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+			throws IOException {
 
 		try {
 			AudioFile audioFile = AudioFileIO.read(file.toFile());
@@ -67,8 +68,10 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 
 			Document doc = new Document();
 
-			doc.add(new TextField("fileName", file.getFileName().toString(), Field.Store.YES));
-			doc.add(new TextField("directory", baseDir.relativize(file.getParent()).toString(), Field.Store.YES));
+			doc.add(new TextField("fileName", file.getFileName().toString(),
+					Field.Store.YES));
+			doc.add(new TextField("directory", baseDir.relativize(file.getParent())
+					.toString(), Field.Store.YES));
 			doc.add(new LongField("size", Files.size(file), Field.Store.YES));
 			doc.add(new LongField("bitrate", ah.getBitRateAsNumber(), Field.Store.YES));
 
@@ -77,9 +80,11 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 
 			if ("mp3".equals(encodingType)) {
 				encoding = "audio/mpeg";
-			} else if ("aac".equals(encodingType)) {
+			}
+			else if ("aac".equals(encodingType)) {
 				encoding = "audio/aac";
-			} else {
+			}
+			else {
 				logger.info("Encoding type {} not found", encodingType);
 			}
 
@@ -122,7 +127,9 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 
 			writer.addDocument(doc);
 
-		} catch (IOException | CannotReadException | TagException | ReadOnlyFileException | InvalidAudioFrameException e) {
+		}
+		catch (IOException | CannotReadException | TagException | ReadOnlyFileException
+				| InvalidAudioFrameException e) {
 			LogFactory.getLog(IndexFileWalker.class).info(e.getMessage());
 		}
 
