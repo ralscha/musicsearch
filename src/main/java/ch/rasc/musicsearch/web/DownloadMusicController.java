@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.lucene.document.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,7 +48,7 @@ public class DownloadMusicController {
 			response.setContentType(contentType);
 			long fileSize = Files.size(musicFile);
 
-			if (appConfig.getNginxSendFileContext() != null) {
+			if (StringUtils.hasText(appConfig.getNginxSendFileContext())) {
 				String redirectUrl = appConfig.getNginxSendFileContext() + "/"
 						+ doc.get("directory") + "/" + doc.get("fileName");
 				response.setHeader("X-Accel-Redirect", redirectUrl);
