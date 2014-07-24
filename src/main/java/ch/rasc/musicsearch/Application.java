@@ -2,9 +2,8 @@ package ch.rasc.musicsearch;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.EnumSet;
 
-import javax.servlet.DispatcherType;
+import javax.servlet.Filter;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -25,17 +24,25 @@ import ch.rasc.edsutil.optimizer.WebResourceProcessor;
 @Configuration
 @ComponentScan(basePackages = { "ch.ralscha.extdirectspring", "ch.rasc.musicsearch" })
 @EnableAutoConfiguration
-public class Main extends SpringBootServletInitializer {
+public class Application extends SpringBootServletInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(Main.class);
+		return application.sources(Application.class);
 	}
 
 	public static void main(String[] args) throws Exception {
 		System.setProperty("spring.profiles.active",
 				System.getProperty("spring.profiles.active", "development"));
-		SpringApplication.run(Main.class, args);
+		SpringApplication.run(Application.class, args);
+	}
+
+	@Bean
+	public Filter characterEncodingFilter() {
+		CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+		characterEncodingFilter.setEncoding(StandardCharsets.UTF_8.name());
+		characterEncodingFilter.setForceEncoding(false);
+		return characterEncodingFilter;
 	}
 
 	@Bean
@@ -43,35 +50,25 @@ public class Main extends SpringBootServletInitializer {
 			final Environment environment) {
 		return servletContext -> {
 			try {
+				boolean isDefaultProfileActive = environment.acceptsProfiles("default");
 				WebResourceProcessor processor = new WebResourceProcessor(servletContext,
-						environment.acceptsProfiles("production"));
+						isDefaultProfileActive);
 				processor.process();
 
-				ClassPathResource cpr = new ClassPathResource("/index.html");
-				ClassPathResource loaderCpr = new ClassPathResource("/loader.css");
+				ClassPathResource cpr = new ClassPathResource("index.html");
 				String indexHtml = StreamUtils.copyToString(cpr.getInputStream(),
 						StandardCharsets.UTF_8);
 				indexHtml = indexHtml.replace("application.app_css",
 						(String) servletContext.getAttribute("app_css"));
 				indexHtml = indexHtml.replace("application.app_js",
 						(String) servletContext.getAttribute("app_js"));
-				indexHtml = indexHtml.replace("loader.css", StreamUtils.copyToString(
-						loaderCpr.getInputStream(), StandardCharsets.UTF_8));
 				indexHtml = indexHtml.replace("application.getContextPath()",
 						servletContext.getContextPath());
 				servletContext.setAttribute("index.html", indexHtml);
 			}
 			catch (IOException e) {
-				LoggerFactory.getLogger(Main.class).error(
-						"read index.html and loader.css", e);
+				LoggerFactory.getLogger(Application.class).error("read index.html", e);
 			}
-
-			final CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
-			characterEncodingFilter.setEncoding("UTF-8");
-			characterEncodingFilter.setForceEncoding(false);
-			servletContext.addFilter("characterEncodingFilter", characterEncodingFilter)
-					.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), false,
-							"/*");
 		};
 	}
 
