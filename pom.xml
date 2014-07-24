@@ -19,7 +19,7 @@
 	<properties>
 	    <java.version>1.8</java.version>
 	    <tomcat.version>8.0.9</tomcat.version>
-		<eds.version>1.4.1</eds.version>
+		<eds.version>1.4.2</eds.version>
 		<lucene.version>4.9.0</lucene.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -52,7 +52,7 @@
 		<dependency>
 			<groupId>ch.rasc</groupId>
 			<artifactId>extclassgenerator-annotations</artifactId>
-			<version>1.0.4</version>
+			<version>1.0.5</version>
 		</dependency>
 
 		<dependency>
@@ -176,7 +176,7 @@
 					<dependency>
 						<groupId>ch.rasc</groupId>
 						<artifactId>extclassgenerator</artifactId>
-						<version>1.0.4</version>
+						<version>1.0.5</version>
 					</dependency>
 				</dependencies>
 			</plugin>
