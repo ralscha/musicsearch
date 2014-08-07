@@ -17,10 +17,11 @@
 	</parent>
 
 	<properties>
-	    <java.version>1.8</java.version>
-	    <tomcat.version>8.0.9</tomcat.version>
+		<java.version>1.8</java.version>
+		<tomcat.version>8.0.9</tomcat.version>
 		<eds.version>1.4.2</eds.version>
 		<lucene.version>4.9.0</lucene.version>
+		<jackson.version>2.4.1</jackson.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.debug>true</maven.compiler.debug>
@@ -105,6 +106,18 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.4.1.1</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.4.1.3</version>
+		</dependency>
+
+		<dependency>
 			<groupId>com.yahoo.platform.yui</groupId>
 			<artifactId>yuicompressor</artifactId>
 			<version>2.4.7</version>
@@ -117,7 +130,7 @@
 		</dependency>
 
 	</dependencies>
-	
+
 	<repositories>
 		<repository>
 			<id>rasc</id>
@@ -154,7 +167,7 @@
 			<plugin>
 				<groupId>com.mysema.maven</groupId>
 				<artifactId>apt-maven-plugin</artifactId>
-				<version>1.1.1</version>
+				<version>1.1.2</version>
 				<executions>
 					<execution>
 						<id>modelgen</id>
@@ -219,7 +232,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 		</plugins>
 
 	</build>
