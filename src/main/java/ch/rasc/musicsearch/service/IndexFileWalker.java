@@ -86,6 +86,7 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 			}
 			else {
 				logger.info("Encoding type {} not found", encodingType);
+				return FileVisitResult.CONTINUE;
 			}
 
 			doc.add(new StoredField("encoding", encoding));
