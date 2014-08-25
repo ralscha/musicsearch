@@ -5,11 +5,11 @@
 --- 
   variable: app_js
   resources:
-  - path: /resources/extjs-gpl/{extjs.version}/ext-all-dev.js
+  - path: /resources/extjs/{extjs.version}/ext-all-dev.js
     dev: script
     prod: ignore
       
-  - path: /resources/extjs-gpl/{extjs.version}/ext-all.js
+  - path: /resources/extjs/{extjs.version}/ext-all.js
     dev: ignore
     prod: script  
     
@@ -79,7 +79,7 @@
 ---
   variable: app_css
   resources:
-  - path: /resources/extjs/4.2.1/ext-theme-steelblue-all.css
+  - path: /resources/extjs/{extjs.version}/ext-theme-steelblue-all.css
     dev: link
     prod: concat_minify
     classpath: /META-INF/resources
