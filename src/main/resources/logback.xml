@@ -2,8 +2,8 @@
 <!DOCTYPE configuration>
 <configuration debug="false">
   
-  <include resource="org/springframework/boot/logging/logback/base.xml"/>
+  
   <logger name="org.jaudiotagger" level="ERROR" />
-  <logger name="ch.rasc.musicsearch" level="INFO" />
+  <logger name="ch.rasc.musicsearch" level="ERROR" />
    
 </configuration>
