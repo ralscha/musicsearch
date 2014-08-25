@@ -5,17 +5,21 @@ import java.nio.charset.StandardCharsets;
 
 import javax.servlet.Filter;
 
+import org.apache.coyote.http11.AbstractHttp11Protocol;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.context.embedded.ServletContextInitializer;
+import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.MediaType;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
@@ -32,9 +36,9 @@ public class Application extends SpringBootServletInitializer {
 	}
 
 	public static void main(String[] args) throws Exception {
-		System.setProperty("spring.profiles.active",
-				System.getProperty("spring.profiles.active", "development"));
-		SpringApplication.run(Application.class, args);
+		SpringApplication app = new SpringApplication(Application.class);
+		app.setShowBanner(false);
+		app.run(args);
 	}
 
 	@Bean
@@ -70,6 +74,23 @@ public class Application extends SpringBootServletInitializer {
 				LoggerFactory.getLogger(Application.class).error("read index.html", e);
 			}
 		};
+	}
+
+	@Bean
+	public EmbeddedServletContainerCustomizer servletContainerCustomizer() {
+		return servletContainer -> ((TomcatEmbeddedServletContainerFactory) servletContainer)
+				.addConnectorCustomizers(connector -> {
+					AbstractHttp11Protocol<?> httpProtocol = (AbstractHttp11Protocol<?>) connector
+							.getProtocolHandler();
+					httpProtocol.setCompression("on");
+					httpProtocol.setCompressionMinSize(512);
+					String mimeTypes = httpProtocol.getCompressableMimeTypes();
+					String additionalMimeTypes = mimeTypes + ","
+							+ MediaType.APPLICATION_JSON_VALUE + ","
+							+ "application/javascript,text/css";
+
+					httpProtocol.setCompressableMimeTypes(additionalMimeTypes);
+				});
 	}
 
 }
