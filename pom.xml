@@ -13,22 +13,23 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.1.5.RELEASE</version>
+		<version>1.1.7.RELEASE </version>
 	</parent>
 
 	<properties>
 		<java.version>1.8</java.version>
-		<tomcat.version>8.0.11</tomcat.version>
-		<eds.version>1.4.2</eds.version>
-		<lucene.version>4.9.0</lucene.version>
-		<jackson.version>2.4.2</jackson.version>
+		<tomcat.version>8.0.14</tomcat.version>
+		<eds.version>1.4.3</eds.version>
+		<lucene.version>4.10.1</lucene.version>
+		<jackson.version>2.4.3</jackson.version>
+		<spring.version>4.1.1.RELEASE</spring.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.debug>true</maven.compiler.debug>
 
 		<maven.build.timestamp.format>yyyy-MM-dd'T'hh:mm:ss.SSSZ</maven.build.timestamp.format>
 		<build.timestamp>${maven.build.timestamp}</build.timestamp>
-		<extjs.version>4.2.2</extjs.version>
+		<extjs.version>4.2.4.1511</extjs.version>
 	</properties>
 
 	<dependencies>
@@ -47,7 +48,7 @@
 		<dependency>
 			<groupId>ch.rasc</groupId>
 			<artifactId>edsutil</artifactId>
-			<version>2.0.3</version>
+			<version>2.0.5</version>
 		</dependency>
 
 		<dependency>
@@ -78,7 +79,7 @@
 		<dependency>
 			<groupId>resources</groupId>
 			<artifactId>extjs-theme-steelblue</artifactId>
-			<version>${extjs.version}</version>
+			<version>4.2.2</version>
 		</dependency>
 
 		<dependency>
@@ -108,7 +109,7 @@
 		<dependency>
 			<groupId>com.yahoo.platform.yui</groupId>
 			<artifactId>yuicompressor</artifactId>
-			<version>2.4.7</version>
+			<version>2.4.8</version>
 			<exclusions>
 				<exclusion>
 					<groupId>rhino</groupId>
