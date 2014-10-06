@@ -3,7 +3,7 @@ Ext.Loader.setConfig({
 	enabled: true,
 	paths: {
 		'MusicSearch': 'app',
-		'Ext.ux': 'resources/extjs-gpl/4.2.2/ux'
+		'Ext.ux': 'resources/extjs-gpl/4.2.4.1511/ux'
 	}
 });
 /* </debug> */

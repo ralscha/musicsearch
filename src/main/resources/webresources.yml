@@ -79,7 +79,7 @@
 ---
   variable: app_css
   resources:
-  - path: /resources/extjs/{extjs.version}/ext-theme-steelblue-all.css
+  - path: /resources/extjs/4.2.2/ext-theme-steelblue-all.css
     dev: link
     prod: concat_minify
     classpath: /META-INF/resources
