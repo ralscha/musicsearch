@@ -22,7 +22,6 @@ import org.apache.lucene.queryparser.classic.QueryParserBase;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,10 +112,10 @@ public class SearchService {
 
 		List<Song> resultList = new ArrayList<>();
 
-		try (Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_4_9)) {
+		try (Analyzer analyzer = new StandardAnalyzer()) {
 
-			MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_4_9,
-					QUERY_FIELDS, analyzer);
+			MultiFieldQueryParser parser = new MultiFieldQueryParser(QUERY_FIELDS,
+					analyzer);
 			parser.setDefaultOperator(QueryParserBase.AND_OPERATOR);
 			parser.setAllowLeadingWildcard(true);
 
