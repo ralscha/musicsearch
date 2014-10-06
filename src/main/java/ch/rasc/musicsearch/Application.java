@@ -23,10 +23,11 @@ import org.springframework.http.MediaType;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
+import ch.ralscha.extdirectspring.ExtDirectSpring;
 import ch.rasc.edsutil.optimizer.WebResourceProcessor;
 
 @Configuration
-@ComponentScan(basePackages = { "ch.ralscha.extdirectspring", "ch.rasc.musicsearch" })
+@ComponentScan(basePackageClasses = { ExtDirectSpring.class, Application.class })
 @EnableAutoConfiguration
 public class Application extends SpringBootServletInitializer {
 
