@@ -43,14 +43,6 @@ public class Application extends SpringBootServletInitializer {
 	}
 
 	@Bean
-	public Filter characterEncodingFilter() {
-		CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
-		characterEncodingFilter.setEncoding(StandardCharsets.UTF_8.name());
-		characterEncodingFilter.setForceEncoding(false);
-		return characterEncodingFilter;
-	}
-
-	@Bean
 	public ServletContextInitializer servletContextInitializer(
 			final Environment environment) {
 		return servletContext -> {
