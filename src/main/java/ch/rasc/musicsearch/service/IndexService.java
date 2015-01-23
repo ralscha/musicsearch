@@ -47,24 +47,24 @@ public class IndexService {
 			indexMusic(ixDir);
 		}
 
-		indexDirectory = FSDirectory.open(ixDir.toFile());
-		indexReader = DirectoryReader.open(indexDirectory);
-		indexSearcher = new IndexSearcher(indexReader);
+		this.indexDirectory = FSDirectory.open(ixDir.toFile());
+		this.indexReader = DirectoryReader.open(this.indexDirectory);
+		this.indexSearcher = new IndexSearcher(this.indexReader);
 	}
 
 	@PreDestroy
 	public void destroy() {
-		if (indexReader != null) {
+		if (this.indexReader != null) {
 			try {
-				indexReader.close();
+				this.indexReader.close();
 			}
 			catch (IOException e) {
 				// ignore exception
 			}
 		}
-		if (indexDirectory != null) {
+		if (this.indexDirectory != null) {
 			try {
-				indexDirectory.close();
+				this.indexDirectory.close();
 			}
 			catch (IOException e) {
 				// ignore exception
@@ -73,16 +73,16 @@ public class IndexService {
 	}
 
 	public IndexSearcher getIndexSearcher() {
-		return indexSearcher;
+		return this.indexSearcher;
 	}
 
 	private void indexMusic(Path ixDir) throws IOException {
 
-		Path musicDir = Paths.get(appConfig.getMusicDir());
+		Path musicDir = Paths.get(this.appConfig.getMusicDir());
 
 		try (Directory dir = FSDirectory.open(ixDir.toFile());
 				Analyzer analyzer = new StandardAnalyzer()) {
-			IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_4_10_1, analyzer);
+			IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_4_10_3, analyzer);
 			iwc.setOpenMode(OpenMode.CREATE_OR_APPEND);
 
 			IndexFileWalker walker = null;

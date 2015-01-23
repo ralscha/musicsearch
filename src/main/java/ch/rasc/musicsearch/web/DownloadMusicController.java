@@ -37,23 +37,23 @@ public class DownloadMusicController {
 	public void download(@RequestParam(value = "docId", required = true) int docId,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-		Document doc = indexService.getIndexSearcher().doc(docId);
+		Document doc = this.indexService.getIndexSearcher().doc(docId);
 
 		if (doc != null) {
 
-			Path musicFile = Paths.get(appConfig.getMusicDir(), doc.get("directory"),
-					doc.get("fileName"));
+			Path musicFile = Paths.get(this.appConfig.getMusicDir(),
+					doc.get("directory"), doc.get("fileName"));
 
 			String contentType = Files.probeContentType(musicFile);
 			response.setContentType(contentType);
 			long fileSize = Files.size(musicFile);
 
-			if (StringUtils.hasText(appConfig.getNginxSendFileContext())) {
-				String redirectUrl = appConfig.getNginxSendFileContext() + "/"
+			if (StringUtils.hasText(this.appConfig.getNginxSendFileContext())) {
+				String redirectUrl = this.appConfig.getNginxSendFileContext() + "/"
 						+ doc.get("directory") + "/" + doc.get("fileName");
 				response.setHeader("X-Accel-Redirect", redirectUrl);
 			}
-			else if (appConfig.isApacheSendFile()) {
+			else if (this.appConfig.isApacheSendFile()) {
 				response.setHeader("X-SendFile", musicFile.toAbsolutePath().toString());
 			}
 			else if (Boolean.TRUE.equals(request

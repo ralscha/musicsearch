@@ -63,14 +63,14 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 			AudioHeader ah = audioFile.getAudioHeader();
 
 			int trackLength = ah.getTrackLength();
-			totalDuration = totalDuration + trackLength;
-			noOfSongs++;
+			this.totalDuration = this.totalDuration + trackLength;
+			this.noOfSongs++;
 
 			Document doc = new Document();
 
 			doc.add(new TextField("fileName", file.getFileName().toString(),
 					Field.Store.YES));
-			doc.add(new TextField("directory", baseDir.relativize(file.getParent())
+			doc.add(new TextField("directory", this.baseDir.relativize(file.getParent())
 					.toString(), Field.Store.YES));
 			doc.add(new LongField("size", Files.size(file), Field.Store.YES));
 			doc.add(new LongField("bitrate", ah.getBitRateAsNumber(), Field.Store.YES));
@@ -99,7 +99,7 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 			value = tag.getFirst(FieldKey.ARTIST);
 			if (StringUtils.hasText(value)) {
 				doc.add(new TextField("artist", value, Field.Store.YES));
-				artists.add(value);
+				this.artists.add(value);
 			}
 
 			value = tag.getFirst(FieldKey.ALBUM);
@@ -126,7 +126,7 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 				doc.add(new IntField("duration", trackLength, Field.Store.YES));
 			}
 
-			writer.addDocument(doc);
+			this.writer.addDocument(doc);
 
 		}
 		catch (IOException | CannotReadException | TagException | ReadOnlyFileException
@@ -139,15 +139,15 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 	}
 
 	public long getTotalDuration() {
-		return totalDuration;
+		return this.totalDuration;
 	}
 
 	public int getNoOfSongs() {
-		return noOfSongs;
+		return this.noOfSongs;
 	}
 
 	public Set<String> getArtists() {
-		return artists;
+		return this.artists;
 	}
 
 }

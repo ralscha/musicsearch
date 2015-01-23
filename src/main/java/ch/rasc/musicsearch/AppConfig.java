@@ -16,7 +16,7 @@ public class AppConfig {
 	private boolean apacheSendFile = false;
 
 	public String getMusicDir() {
-		return musicDir;
+		return this.musicDir;
 	}
 
 	public void setMusicDir(String musicDir) {
@@ -24,7 +24,7 @@ public class AppConfig {
 	}
 
 	public String getIndexDir() {
-		return indexDir;
+		return this.indexDir;
 	}
 
 	public void setIndexDir(String indexDir) {
@@ -32,7 +32,7 @@ public class AppConfig {
 	}
 
 	public String getNginxSendFileContext() {
-		return nginxSendFileContext;
+		return this.nginxSendFileContext;
 	}
 
 	public void setNginxSendFileContext(String nginxSendFileContext) {
@@ -40,7 +40,7 @@ public class AppConfig {
 	}
 
 	public boolean isApacheSendFile() {
-		return apacheSendFile;
+		return this.apacheSendFile;
 	}
 
 	public void setApacheSendFile(boolean apacheSendFile) {

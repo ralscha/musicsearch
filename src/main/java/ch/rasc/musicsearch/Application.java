@@ -3,8 +3,6 @@ package ch.rasc.musicsearch;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import javax.servlet.Filter;
-
 import org.apache.coyote.http11.AbstractHttp11Protocol;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -21,7 +19,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.util.StreamUtils;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
 import ch.ralscha.extdirectspring.ExtDirectSpring;
 import ch.rasc.edsutil.optimizer.WebResourceProcessor;

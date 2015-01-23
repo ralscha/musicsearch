@@ -12,11 +12,11 @@ public class Info {
 	}
 
 	public Integer getNoOfSongs() {
-		return noOfSongs;
+		return this.noOfSongs;
 	}
 
 	public Integer getTotalDuration() {
-		return totalDuration;
+		return this.totalDuration;
 	}
 
 }

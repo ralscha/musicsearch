@@ -66,7 +66,7 @@ public class SearchService {
 		Integer totalDuration = null;
 
 		try {
-			Path infoFile = Paths.get(appConfig.getIndexDir(), "info.properties");
+			Path infoFile = Paths.get(this.appConfig.getIndexDir(), "info.properties");
 			Properties properties;
 			try (BufferedReader br = Files.newBufferedReader(infoFile,
 					StandardCharsets.UTF_8)) {
@@ -95,7 +95,7 @@ public class SearchService {
 
 	@ExtDirectMethod(value = ExtDirectMethodType.STORE_READ)
 	public List<Artist> readArtists() throws IOException {
-		Path artistsFile = Paths.get(appConfig.getIndexDir(), "artists.txt");
+		Path artistsFile = Paths.get(this.appConfig.getIndexDir(), "artists.txt");
 		return Files.lines(artistsFile, StandardCharsets.UTF_8).map(Artist::new)
 				.collect(Collectors.toList());
 	}
@@ -133,9 +133,9 @@ public class SearchService {
 				}
 			}
 
-			TopDocs results = indexService.getIndexSearcher().search(query, 10000);
+			TopDocs results = this.indexService.getIndexSearcher().search(query, 10000);
 			for (ScoreDoc scoreDoc : results.scoreDocs) {
-				Document doc = indexService.getIndexSearcher().doc(scoreDoc.doc);
+				Document doc = this.indexService.getIndexSearcher().doc(scoreDoc.doc);
 
 				Song song = new Song();
 				song.setId(scoreDoc.doc);

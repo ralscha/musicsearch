@@ -51,12 +51,12 @@ public class DownloadMusicZipController {
 				zip.setLevel(Deflater.NO_COMPRESSION);
 
 				for (String id : selectedMusicIds.split(",")) {
-					Document doc = indexService.getIndexSearcher().doc(
+					Document doc = this.indexService.getIndexSearcher().doc(
 							Integer.parseInt(id));
 
 					if (doc != null) {
 
-						Path musicFile = Paths.get(appConfig.getMusicDir(),
+						Path musicFile = Paths.get(this.appConfig.getMusicDir(),
 								doc.get("directory"), doc.get("fileName"));
 						ZipEntry entry = new ZipEntry(musicFile.getFileName().toString());
 						entry.setTime(System.currentTimeMillis());

@@ -22,7 +22,7 @@ public class Song {
 	private String encoding;
 
 	public String getTitle() {
-		return title;
+		return this.title;
 	}
 
 	public void setTitle(String title) {
@@ -30,7 +30,7 @@ public class Song {
 	}
 
 	public String getAlbum() {
-		return album;
+		return this.album;
 	}
 
 	public void setAlbum(String album) {
@@ -38,7 +38,7 @@ public class Song {
 	}
 
 	public String getArtist() {
-		return artist;
+		return this.artist;
 	}
 
 	public void setArtist(String artist) {
@@ -46,7 +46,7 @@ public class Song {
 	}
 
 	public String getYear() {
-		return year;
+		return this.year;
 	}
 
 	public void setYear(String year) {
@@ -54,7 +54,7 @@ public class Song {
 	}
 
 	public Integer getDurationInSeconds() {
-		return durationInSeconds;
+		return this.durationInSeconds;
 	}
 
 	public void setDurationInSeconds(Integer durationInSeconds) {
@@ -62,7 +62,7 @@ public class Song {
 	}
 
 	public Long getBitrate() {
-		return bitrate;
+		return this.bitrate;
 	}
 
 	public void setBitrate(Long bitrate) {
@@ -70,7 +70,7 @@ public class Song {
 	}
 
 	public String getEncoding() {
-		return encoding;
+		return this.encoding;
 	}
 
 	public void setEncoding(String encoding) {
@@ -78,7 +78,7 @@ public class Song {
 	}
 
 	public int getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(int id) {
