@@ -19,10 +19,10 @@
 	<properties>
 		<java.version>1.8</java.version>
 		
-		<eds.version>1.5.0</eds.version>
-		<lucene.version>4.10.3</lucene.version>
+		<eds.version>1.5.1</eds.version>
+		<lucene.version>5.0.0</lucene.version>
 		
-		<spring.version>4.1.4.RELEASE</spring.version>
+		<spring.version>4.1.5.RELEASE</spring.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.debug>true</maven.compiler.debug>

@@ -20,7 +20,6 @@ import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.util.Version;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +46,7 @@ public class IndexService {
 			indexMusic(ixDir);
 		}
 
-		this.indexDirectory = FSDirectory.open(ixDir.toFile());
+		this.indexDirectory = FSDirectory.open(ixDir);
 		this.indexReader = DirectoryReader.open(this.indexDirectory);
 		this.indexSearcher = new IndexSearcher(this.indexReader);
 	}
@@ -80,9 +79,9 @@ public class IndexService {
 
 		Path musicDir = Paths.get(this.appConfig.getMusicDir());
 
-		try (Directory dir = FSDirectory.open(ixDir.toFile());
+		try (Directory dir = FSDirectory.open(ixDir);
 				Analyzer analyzer = new StandardAnalyzer()) {
-			IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_4_10_3, analyzer);
+			IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
 			iwc.setOpenMode(OpenMode.CREATE_OR_APPEND);
 
 			IndexFileWalker walker = null;
