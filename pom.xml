@@ -22,7 +22,7 @@
 		<eds.version>1.5.1</eds.version>
 		<lucene.version>5.0.0</lucene.version>
 		
-		<spring.version>4.1.5.RELEASE</spring.version>
+		<spring.version>4.1.6.RELEASE</spring.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.debug>true</maven.compiler.debug>
