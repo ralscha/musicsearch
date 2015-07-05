@@ -51,8 +51,8 @@ public class DownloadMusicZipController {
 				zip.setLevel(Deflater.NO_COMPRESSION);
 
 				for (String id : selectedMusicIds.split(",")) {
-					Document doc = this.indexService.getIndexSearcher().doc(
-							Integer.parseInt(id));
+					Document doc = this.indexService.getIndexSearcher()
+							.doc(Integer.parseInt(id));
 
 					if (doc != null) {
 

@@ -70,8 +70,9 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 
 			doc.add(new TextField("fileName", file.getFileName().toString(),
 					Field.Store.YES));
-			doc.add(new TextField("directory", this.baseDir.relativize(file.getParent())
-					.toString(), Field.Store.YES));
+			doc.add(new TextField("directory",
+					this.baseDir.relativize(file.getParent()).toString(),
+					Field.Store.YES));
 			doc.add(new LongField("size", Files.size(file), Field.Store.YES));
 			doc.add(new LongField("bitrate", ah.getBitRateAsNumber(), Field.Store.YES));
 

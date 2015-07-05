@@ -41,8 +41,8 @@ public class DownloadMusicController {
 
 		if (doc != null) {
 
-			Path musicFile = Paths.get(this.appConfig.getMusicDir(),
-					doc.get("directory"), doc.get("fileName"));
+			Path musicFile = Paths.get(this.appConfig.getMusicDir(), doc.get("directory"),
+					doc.get("fileName"));
 
 			String contentType = Files.probeContentType(musicFile);
 			response.setContentType(contentType);
@@ -56,8 +56,8 @@ public class DownloadMusicController {
 			else if (this.appConfig.isApacheSendFile()) {
 				response.setHeader("X-SendFile", musicFile.toAbsolutePath().toString());
 			}
-			else if (Boolean.TRUE.equals(request
-					.getAttribute("org.apache.tomcat.sendfile.support"))) {
+			else if (Boolean.TRUE
+					.equals(request.getAttribute("org.apache.tomcat.sendfile.support"))) {
 				long startAt = 0;
 				long end = fileSize - 1;
 				String rangeHeader = request.getHeader("Range");
