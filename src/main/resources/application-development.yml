@@ -1,0 +1,17 @@
+spring:
+  resources:
+    cache-period: 
+    
+app:
+  music-dir: E:/music
+  index-dir: E:/music_index
+  nginx-send-file-context: 
+
+logging:
+  level:
+    org.jaudiotagger: ERROR
+    ch.rasc.musicsearch: INFO
+
+server:
+  compression:
+    enabled: false

@@ -1,0 +1,29 @@
+spring:
+  resources:
+    cache-period: 31556926
+  mvc:
+    favicon:
+      enabled: false
+
+app:
+  music-dir: /opt/music_library
+  index-dir: /opt/music_ix
+  nginx-send-file-context: /musiclib
+
+logging:
+  level:
+    org.springframework: WARN
+    org.apache: WARN  
+    org.jaudiotagger: ERROR
+    ch: ERROR
+
+server:
+  compression:
+    enabled: true
+    mime-types:
+      - text/html
+      - text/xml
+      - text/plain
+      - application/json
+      - application/javascript
+      - text/css

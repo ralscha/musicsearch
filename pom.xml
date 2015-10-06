@@ -1,14 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>ch.rasc</groupId>
-	<artifactId>musicsearch</artifactId>
-	<version>1.0.0</version>
-	<packaging>jar</packaging>
 
 	<prerequisites>
 		<maven>3.1.0</maven>
 	</prerequisites>
+
+	<groupId>ch.rasc</groupId>
+	<artifactId>musicsearch</artifactId>
+	<version>1.0.0</version>
+	<packaging>jar</packaging>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -17,19 +19,12 @@
 	</parent>
 
 	<properties>
-		<java.version>1.8</java.version>
-
-		<eds.version>1.6.0</eds.version>
-		<lucene.version>5.3.1</lucene.version>
-
-		<spring.version>4.2.1.RELEASE</spring.version>
-
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.debug>true</maven.compiler.debug>
-
-		<maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss.SSSZ</maven.build.timestamp.format>
-		<build.timestamp>${maven.build.timestamp}</build.timestamp>
-		<extjs.version>4.2.4.1511</extjs.version>
+		<start-class>ch.rasc.musicsearch.Application</start-class>
+		<java.version>1.8</java.version>
+		<jackson.version>2.6.2</jackson.version>
+		<eds.version>1.6.1-SNAPSHOT</eds.version>
+		<lucene.version>5.3.1</lucene.version>
 	</properties>
 
 	<dependencies>
@@ -37,18 +32,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>ch.rasc</groupId>
-			<artifactId>edsutil</artifactId>
-			<version>2.0.8</version>
 		</dependency>
 
 		<dependency>
@@ -61,25 +44,6 @@
 			<groupId>ch.ralscha</groupId>
 			<artifactId>extdirectspring</artifactId>
 			<version>${eds.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>resources</groupId>
-			<artifactId>extjs-all</artifactId>
-			<version>${extjs.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>resources</groupId>
-			<artifactId>extjs-all-debug</artifactId>
-			<version>${extjs.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>resources</groupId>
-			<artifactId>extjs-theme-steelblue</artifactId>
-			<version>4.2.2</version>
 		</dependency>
 
 		<dependency>
@@ -107,18 +71,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.yahoo.platform.yui</groupId>
-			<artifactId>yuicompressor</artifactId>
-			<version>2.4.8</version>
-			<exclusions>
-				<exclusion>
-					<groupId>rhino</groupId>
-					<artifactId>js</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
@@ -126,50 +78,8 @@
 
 	</dependencies>
 
-	<repositories>
-		<repository>
-			<id>rasc</id>
-			<name>My Private Repository</name>
-			<url>https://repo.rasc.ch</url>
-		</repository>
-		<repository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
-
 	<build>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<excludes>
-					<exclude>version.properties</exclude>
-				</excludes>
-			</resource>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>version.properties</include>
-				</includes>
-			</resource>
-		</resources>
-
+	     <finalName>musicsearch</finalName>
 		<plugins>
 
 			<plugin>
@@ -189,10 +99,10 @@
 						</goals>
 						<configuration>
 							<processor>ch.rasc.extclassgenerator.ModelAnnotationProcessor</processor>
-							<outputDirectory>src/main/resources/static</outputDirectory>
+							<outputDirectory>${project.basedir}/client/app</outputDirectory>
 							<options>
 								<debug>true</debug>
-								<outputFormat>extjs4</outputFormat>
+								<outputFormat>extjs5</outputFormat>
 								<surroundApiWithQuotes>true</surroundApiWithQuotes>
 								<lineEnding>LF</lineEnding>
 							</options>
@@ -209,46 +119,134 @@
 			</plugin>
 
 			<plugin>
-				<groupId>com.googlecode.jslint4java</groupId>
-				<artifactId>jslint4java-maven-plugin</artifactId>
-				<version>2.0.5</version>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>lint</id>
-						<phase>process-resources</phase>
+						<id>sencha-app-clean-development</id>
 						<goals>
-							<goal>lint</goal>
+							<goal>exec</goal>
 						</goals>
+						<phase>clean</phase>
 						<configuration>
-							<failOnError>false</failOnError>
-							<sourceFolders>
-								<sourceFolder>${project.basedir}/src/main/resources/static</sourceFolder>
-							</sourceFolders>
-
-							<excludes>
-								<exclude>resources/**/*.js</exclude>
-								<exclude>deft.js</exclude>
-								<exclude>deft-debug.js</exclude>
-							</excludes>
-
-							<options>
-								<browser>true</browser>
-								<sloppy>true</sloppy>
-								<white>true</white>
-								<vars>true</vars>
-								<unparam>true</unparam>
-								<plusplus>true</plusplus>
-								<predef>
-									Ext,Deft,app_context_path,MusicSearch,soundManager,searchService
-								</predef>
-							</options>
+							<executable>sencha</executable>
+							<workingDirectory>${basedir}/client</workingDirectory>
+							<arguments>
+								<argument>app</argument>
+								<argument>clean</argument>
+								<argument>development</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>sencha-app-clean</id>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<phase>clean</phase>
+						<configuration>
+							<executable>sencha</executable>
+							<workingDirectory>${basedir}/client</workingDirectory>
+							<arguments>
+								<argument>app</argument>
+								<argument>clean</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>sencha-app-build</id>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<phase>prepare-package</phase>
+						<configuration>
+							<executable>sencha</executable>
+							<workingDirectory>${basedir}/client</workingDirectory>
+							<arguments>
+								<argument>app</argument>
+								<argument>build</argument>
+							</arguments>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
 
-		</plugins>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>prepare-package</phase>
+						<configuration>
+							<target>
 
+								<copy todir="${basedir}/target/classes/static"
+									includeEmptyDirs="false">
+									<fileset dir="${basedir}/client/build/production/MusicSearch">
+										<exclude name="**/Readme.md" />
+									</fileset>
+								</copy>
+
+								<replace file="${basedir}/target/classes/static/index.html">
+									<replacefilter token="var serverUrl = 'http://localhost:8080/';"
+										value="var serverUrl = '';" />										
+								</replace>
+
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
 	</build>
+
+	<repositories>
+		<repository>
+			<id>sonatype-snapshots</id>
+			<name>Sontatype Snapshots</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>spring-snapshots</id>
+			<name>Spring Snapshots</name>
+			<url>http://repo.spring.io/snapshot</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>http://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>spring-snapshots</id>
+			<name>Spring Snapshots</name>
+			<url>http://repo.spring.io/snapshot</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>http://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
 
 </project>

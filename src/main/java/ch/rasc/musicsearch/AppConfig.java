@@ -3,8 +3,8 @@ package ch.rasc.musicsearch;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-@ConfigurationProperties(prefix = "app")
 @Component
+@ConfigurationProperties(prefix = "app")
 public class AppConfig {
 
 	private String musicDir;

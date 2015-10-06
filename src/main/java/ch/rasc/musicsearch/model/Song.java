@@ -2,7 +2,8 @@ package ch.rasc.musicsearch.model;
 
 import ch.rasc.extclassgenerator.Model;
 
-@Model(value = "MusicSearch.model.Song", readMethod = "searchService.search")
+@Model(value = "MusicSearch.model.Song", readMethod = "searchService.search",
+		writeAllFields = false)
 public class Song {
 
 	private int id;
