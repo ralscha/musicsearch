@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ch.ralscha.extdirectspring.bean.api.PollingProvider;
 import ch.ralscha.extdirectspring.bean.api.RemotingApi;
 import ch.ralscha.extdirectspring.controller.ConfigurationService;
+import ch.ralscha.extdirectspring.util.ExtDirectSpringUtil;
 import ch.ralscha.extdirectspring.util.MethodInfo;
 import ch.ralscha.extdirectspring.util.MethodInfoCache;
 
@@ -61,74 +62,13 @@ class DevelopmentConfig extends WebMvcConfigurerAdapter {
 		registry.addViewController("/").setViewName("forward:/index.html");
 	}
 
-	@Autowired
-	private MethodInfoCache methodInfoCache;
-
-	@Autowired
-	private ConfigurationService configurationService;
-
 	@EventListener
-	public void handleContextRefresh(
-			@SuppressWarnings("unused") ApplicationReadyEvent event) throws IOException {
-
-		RemotingApi remotingApi = new RemotingApi(
-				this.configurationService.getConfiguration().getProviderType(), "router",
-				null);
-
-		for (Map.Entry<MethodInfoCache.Key, MethodInfo> entry : this.methodInfoCache) {
-			MethodInfo methodInfo = entry.getValue();
-			if (methodInfo.getAction() != null) {
-				remotingApi.addAction(entry.getKey().getBeanName(),
-						methodInfo.getAction());
-			}
-			else if (methodInfo.getPollingProvider() != null) {
-				remotingApi.addPollingProvider(methodInfo.getPollingProvider());
-			}
-		}
-
-		remotingApi.sort();
-
-		StringBuilder extDirectConfig = new StringBuilder(100);
-
-		extDirectConfig.append("var REMOTING_API").append(" = ");
-		extDirectConfig.append(new ObjectMapper().writer().withDefaultPrettyPrinter()
-				.writeValueAsString(remotingApi));
-		extDirectConfig.append(";");
-
-		List<PollingProvider> pollingProviders = remotingApi.getPollingProviders();
-		if (!pollingProviders.isEmpty()) {
-
-			extDirectConfig.append("\n\n");
-
-			extDirectConfig.append("var POLLING_URLS").append(" = {");
-			extDirectConfig.append("\n");
-
-			for (int i = 0; i < pollingProviders.size(); i++) {
-				extDirectConfig.append("  ");
-
-				extDirectConfig.append("\"");
-				extDirectConfig.append(pollingProviders.get(i).getEvent());
-				extDirectConfig.append("\"");
-				extDirectConfig.append(" : \"").append("poll").append("/");
-				extDirectConfig.append(pollingProviders.get(i).getBeanName());
-				extDirectConfig.append("/");
-				extDirectConfig.append(pollingProviders.get(i).getMethod());
-				extDirectConfig.append("/");
-				extDirectConfig.append(pollingProviders.get(i).getEvent());
-				extDirectConfig.append("\"");
-				if (i < pollingProviders.size() - 1) {
-					extDirectConfig.append(",\n");
-				}
-			}
-			extDirectConfig.append("\n");
-			extDirectConfig.append("};");
-		}
-
+	public void handleContextRefresh(ApplicationReadyEvent event) throws IOException {
+		String extDirectConfig = ExtDirectSpringUtil
+				.generateApiString(event.getApplicationContext());
 		String userDir = System.getProperty("user.dir");
-
 		Files.write(Paths.get(userDir, "client", "api.js"),
-				extDirectConfig.toString().getBytes(StandardCharsets.UTF_8));
-
+				extDirectConfig.getBytes(StandardCharsets.UTF_8));
 	}
 
 }
