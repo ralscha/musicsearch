@@ -10,8 +10,7 @@ import ch.ralscha.extdirectspring.ExtDirectSpring;
 import ch.ralscha.extdirectspring.controller.ApiController;
 
 @Configuration
-@ComponentScan(
-		basePackageClasses = { ExtDirectSpring.class, Application.class },
+@ComponentScan(basePackageClasses = { ExtDirectSpring.class, Application.class },
 		excludeFilters = { @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
 				value = ApiController.class) })
 @EnableAutoConfiguration

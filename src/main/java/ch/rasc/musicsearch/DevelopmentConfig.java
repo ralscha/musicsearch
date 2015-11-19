@@ -5,10 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -22,14 +19,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import ch.ralscha.extdirectspring.bean.api.PollingProvider;
-import ch.ralscha.extdirectspring.bean.api.RemotingApi;
-import ch.ralscha.extdirectspring.controller.ConfigurationService;
 import ch.ralscha.extdirectspring.util.ExtDirectSpringUtil;
-import ch.ralscha.extdirectspring.util.MethodInfo;
-import ch.ralscha.extdirectspring.util.MethodInfoCache;
 
 @Configuration
 @Profile("development")
