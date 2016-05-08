@@ -12,8 +12,8 @@ import java.util.TreeSet;
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.IntField;
-import org.apache.lucene.document.LongField;
+import org.apache.lucene.document.IntPoint;
+import org.apache.lucene.document.LongPoint;
 import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
@@ -73,8 +73,8 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 			doc.add(new TextField("directory",
 					this.baseDir.relativize(file.getParent()).toString(),
 					Field.Store.YES));
-			doc.add(new LongField("size", Files.size(file), Field.Store.YES));
-			doc.add(new LongField("bitrate", ah.getBitRateAsNumber(), Field.Store.YES));
+			doc.add(new LongPoint("size", Files.size(file)));
+			doc.add(new LongPoint("bitrate", ah.getBitRateAsNumber()));
 
 			String encoding = null;
 			String encodingType = ah.getEncodingType().toLowerCase();
@@ -124,7 +124,7 @@ public class IndexFileWalker extends SimpleFileVisitor<Path> {
 			}
 
 			if (trackLength > 0) {
-				doc.add(new IntField("duration", trackLength, Field.Store.YES));
+				doc.add(new IntPoint("duration", trackLength));
 			}
 
 			this.writer.addDocument(doc);
