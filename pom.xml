@@ -15,7 +15,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.4.0.RELEASE</version>
+		<version>1.4.2.RELEASE</version>
 	</parent>
 
 	<properties>
@@ -23,7 +23,7 @@
 		<start-class>ch.rasc.musicsearch.Application</start-class>
 		<java.version>1.8</java.version>
 		<eds.version>1.7.0</eds.version>
-		<lucene.version>6.2.0</lucene.version>
+		<lucene.version>6.3.0</lucene.version>
 	</properties>
 
 	<dependencies>
@@ -84,6 +84,20 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.5.1</version>
+				<configuration>
+					<debug>true</debug>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<compilerArgs>
+						<compilerArg>-parameters</compilerArg>
+					</compilerArgs>
+				</configuration>
 			</plugin>
 
 			<plugin>
@@ -202,43 +216,5 @@
 
 		</plugins>
 	</build>
-
-	<repositories>
-		<repository>
-			<id>spring-snapshots</id>
-			<name>Spring Snapshots</name>
-			<url>http://repo.spring.io/snapshot</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>http://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>spring-snapshots</id>
-			<name>Spring Snapshots</name>
-			<url>http://repo.spring.io/snapshot</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-		<pluginRepository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>http://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
 
 </project>
