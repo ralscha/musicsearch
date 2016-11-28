@@ -1,6 +1,7 @@
 spring:
   resources:
-    cache-period: 
+    cache-period: 0
+    static-locations: file:./client/
     
 app:
   music-dir: E:/music
@@ -13,5 +14,6 @@ logging:
     ch.rasc.musicsearch: INFO
 
 server:
+  port: 8080
   compression:
     enabled: false

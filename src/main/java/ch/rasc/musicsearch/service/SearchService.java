@@ -87,7 +87,7 @@ public class SearchService {
 
 		}
 		catch (IOException e) {
-			logger.error("getInfo", e);
+			logger.info("getInfo", e);
 		}
 
 		return new Info(noOfSongs, totalDuration);
