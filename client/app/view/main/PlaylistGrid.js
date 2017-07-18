@@ -7,7 +7,7 @@ Ext.define('MusicSearch.view.PlaylistGrid', {
 	reference: 'playlistGrid',
 
 	viewConfig: {
-		getRowClass: function(rec, idx, rowPrms, ds) {
+		getRowClass(rec, idx, rowPrms, ds) {
 			return rec.get('playing') ? 'playlist-playing-row' : '';
 		},
 		plugins: {

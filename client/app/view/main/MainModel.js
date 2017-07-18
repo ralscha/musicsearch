@@ -36,7 +36,7 @@ Ext.define('MusicSearch.view.main.MainModel', {
 
 	formulas: {
 		showPrevButton: function(get) {
-			var ps = get('playingSound');
+			const ps = get('playingSound');
 			if (ps) {
 				if (ps.songIndex > 0) {
 					return true;
@@ -48,9 +48,9 @@ Ext.define('MusicSearch.view.main.MainModel', {
 			return false;
 		},
 		showNextButton: function(get) {
-			var ps = get('playingSound');
+			const ps = get('playingSound');
 			if (ps) {
-				var store = get('playlist');
+				const store = get('playlist');
 				if (ps.songIndex < store.getCount() - 1) {
 					return true;
 				}
@@ -61,28 +61,28 @@ Ext.define('MusicSearch.view.main.MainModel', {
 			return false;
 		},
 		nowPlaying: function(get) {
-			var ps = get('playingSound');
+			const ps = get('playingSound');
 			if (ps) {
 				return 'Now playing: ' + ps.song.get('title') + ' - ' + ps.song.get('artist')
 			}
 			return 'Now playing: ';
 		},
 		progressText: function(get) {
-			var ps = get('playingSound');
-			var dragging = get('progressSliderDragging');
+			const ps = get('playingSound');
+			const dragging = get('progressSliderDragging');
 			if (ps) {
-				var position = ps.position;
-				var duration = ps.duration;
+				const position = ps.position;
+				const duration = ps.duration;
 				if (!isNaN(position) && !isNaN(duration)) {
-					var currentTimeFmt = MusicSearch.Util.secondsToHms(position / 1000);
-					var durationFmt = MusicSearch.Util.secondsToHms(duration / 1000);
+					const currentTimeFmt = MusicSearch.Util.secondsToHms(position / 1000);
+					const durationFmt = MusicSearch.Util.secondsToHms(duration / 1000);
 					if (!dragging) {
 						return currentTimeFmt + ' / ' + durationFmt;
 					}
 
-					var sliderPos = get('progressSlider.value');
-					var newPos = (sliderPos / 100) * ps.duration;
-					var newPosString = MusicSearch.Util.secondsToHms(newPos / 1000);
+					const sliderPos = get('progressSlider.value');
+					const newPos = (sliderPos / 100) * ps.duration;
+					const newPosString = MusicSearch.Util.secondsToHms(newPos / 1000);
 					return currentTimeFmt + ' (' + newPosString + ') ' + ' / ' + durationFmt;
 				}
 			}

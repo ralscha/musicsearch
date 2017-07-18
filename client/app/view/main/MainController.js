@@ -1,38 +1,36 @@
 Ext.define('MusicSearch.view.main.MainController', {
 	extend: 'Ext.app.ViewController',
 
-	init: function() {
-		searchService.getInfo(function(result) {
-			var d = result.totalDuration;
+	init() {
+		searchService.getInfo((result) => {
+			const d = result.totalDuration;
 
-			var days = Math.floor(d / (3600 * 24));
-			var h = Math.floor(d % (3600 * 24) / 3600);
-			var m = Math.floor(d % 3600 / 60);
-			var s = Math.floor(d % 3600 % 60);
+			const days = Math.floor(d / (3600 * 24));
+			const h = Math.floor(d % (3600 * 24) / 3600);
+			const m = Math.floor(d % 3600 / 60);
+			const s = Math.floor(d % 3600 % 60);
 
-			var duration = days > 0 ? days + " Days " : "";
+			let duration = days > 0 ? days + " Days " : "";
 			duration += h > 0 ? h + " Hours " : "";
 			duration += m > 0 ? m + " Minutes " : "";
 			duration += s > 0 ? s + " Seconds" : "";
 
 			this.getViewModel().set('searchResultTitle', 'MusicSearch: Total ' + result.noOfSongs + ' songs (' + duration + ')');
-		}, this);
+		});
 	},
 
-	onArtistDblClick: function(view, record) {
-		var term = 'artist:"' + record.get('name') + '"';
+	onArtistDblClick(view, record) {
+		const term = 'artist:"' + record.get('name') + '"';
 		this.lookup('filterField').setValue(term);
 		this.lookup('artistsGrid').collapse();
 	},
 
-	onSelectionChange: function() {
-		var sm = this.lookup('searchResult').getSelectionModel();
+	onSelectionChange() {
+		const sm = this.lookup('searchResult').getSelectionModel();
 
 		if (sm.hasSelection()) {
-			var selectedRecords = sm.getSelection();
-			var ids = Ext.Array.map(selectedRecords, function(item) {
-				return item.getId();
-			});
+			const selectedRecords = sm.getSelection();
+			const ids = Ext.Array.map(selectedRecords, (item) => item.getId());
 			this.getViewModel().set('selectedSongsId', ids.join(','));
 		}
 		else {
@@ -40,26 +38,26 @@ Ext.define('MusicSearch.view.main.MainController', {
 		}
 	},
 
-	onSongDblClick: function(view, record) {
-		var playlist = this.getStore('playlist');
+	onSongDblClick(view, record) {
+		const playlist = this.getStore('playlist');
 		if (playlist.indexOf(record) === -1) {
 			playlist.add(record);
 		}
 	},
 
-	onFilter: function(cmp, newValue) {
-		var val = Ext.isString(newValue) ? newValue : this.lookup('filterField').getValue();
+	onFilter(cmp, newValue) {
+		const val = Ext.isString(newValue) ? newValue : this.lookup('filterField').getValue();
 		this.searchSongs(val);
 	},
 
-	onFilterClear: function(tf) {
+	onFilterClear(tf) {
 		tf.setValue('');
 	},
 
-	searchSongs: function(term) {
-		var vm = this.getViewModel();
-		var filterValue = Ext.String.trim(term) || '';
-		var songsStore = this.getStore('songs');
+	searchSongs(term) {
+		const vm = this.getViewModel();
+		const filterValue = Ext.String.trim(term) || '';
+		const songsStore = this.getStore('songs');
 		vm.set('hasSongs', false);
 		if (!Ext.isEmpty(filterValue)) {
 			songsStore.clearFilter(true);
@@ -72,10 +70,10 @@ Ext.define('MusicSearch.view.main.MainController', {
 		}
 	},
 
-	onSongsLoaded: function(store, records) {
-		var vm = this.getViewModel();
+	onSongsLoaded(store, records) {
+		const vm = this.getViewModel();
 
-		var output;
+		let output;
 		if (store.getCount() > 0) {
 			output = 'Found ' + Ext.util.Format.plural(store.getCount(), 'song', 'songs');
 			vm.set('hasSongs', true);
@@ -88,44 +86,44 @@ Ext.define('MusicSearch.view.main.MainController', {
 		vm.set('searchInfo', output);
 	},
 
-	onAddSelectedButtonClick: function() {
-		var playlist = this.getStore('playlist');
-		var sm = this.lookup('searchResult').getSelectionModel();
-		var insertRecords = [];
+	onAddSelectedButtonClick() {
+		const playlist = this.getStore('playlist');
+		const sm = this.lookup('searchResult').getSelectionModel();
+		const insertRecords = [];
 
-		Ext.Array.forEach(sm.getSelection(), function(record) {
+		Ext.Array.forEach(sm.getSelection(), (record) => {
 			if (playlist.indexOf(record) === -1) {
 				insertRecords.push(record);
 			}
-		}, this);
+		});
 
 		playlist.add(insertRecords);
 		sm.deselectAll();
 	},
 
-	onAddAllButtonClick: function() {
-		var insertRecords = [];
-		var playlist = this.getStore('playlist');
+	onAddAllButtonClick() {
+		const insertRecords = [];
+		const playlist = this.getStore('playlist');
 
-		this.getStore('songs').each(function(record) {
+		this.getStore('songs').each((record) => {
 			if (playlist.indexOf(record) === -1) {
 				insertRecords.push(record);
 			}
-		}, this);
+		});
 
 		playlist.add(insertRecords);
 	},
 
-	onPlaylistDatachanged: function(store) {
+	onPlaylistDatachanged(store) {
 		this.getViewModel().set('hasPlaylist', store.getCount() > 0);
 	},
 
-	onPlaylistItemDblClick: function(view, record) {
+	onPlaylistItemDblClick(view, record) {
 		this.playSong(record);
 	},
 
-	onPlayButtonClick: function() {
-		var selectedModels = this.lookup('playlistGrid').getSelectionModel().getSelection();
+	onPlayButtonClick() {
+		const selectedModels = this.lookup('playlistGrid').getSelectionModel().getSelection();
 		if (selectedModels && selectedModels.length >= 1) {
 			this.playSong(selectedModels[0]);
 		}
@@ -134,8 +132,8 @@ Ext.define('MusicSearch.view.main.MainController', {
 		}
 	},
 
-	onPauseButtonClick: function(button) {
-		var ps = this.getViewModel().get('playingSound');
+	onPauseButtonClick(button) {
+		const ps = this.getViewModel().get('playingSound');
 		if (button.pressed) {
 			if (ps) {
 				ps.pause();
@@ -148,13 +146,13 @@ Ext.define('MusicSearch.view.main.MainController', {
 		}
 	},
 
-	onStopButtonClick: function() {
+	onStopButtonClick() {
 		this.stopSong();
 	},
 
-	onPrevButtonClick: function() {
-		var playlistStore = this.getStore('playlist');
-		var songIndex = this.getViewModel().get('playingSound').songIndex;
+	onPrevButtonClick() {
+		const playlistStore = this.getStore('playlist');
+		const songIndex = this.getViewModel().get('playingSound').songIndex;
 		if (songIndex !== -1) {
 			if (songIndex > 0) {
 				this.playSong(playlistStore.getAt(songIndex - 1));
@@ -162,9 +160,9 @@ Ext.define('MusicSearch.view.main.MainController', {
 		}
 	},
 
-	onNextButtonClick: function() {
-		var playlistStore = this.getStore('playlist');
-		var songIndex = this.getViewModel().get('playingSound').songIndex;
+	onNextButtonClick() {
+		const playlistStore = this.getStore('playlist');
+		const songIndex = this.getViewModel().get('playingSound').songIndex;
 		if (songIndex !== -1) {
 			if (songIndex < playlistStore.getCount() - 1) {
 				this.playSong(playlistStore.getAt(songIndex + 1));
@@ -172,10 +170,10 @@ Ext.define('MusicSearch.view.main.MainController', {
 		}
 	},
 
-	onRemoveButtonClick: function() {
-		var selectedModels = this.lookup('playlistGrid').getSelectionModel().getSelection();
-		var playing = false;
-		Ext.each(selectedModels, function(item) {
+	onRemoveButtonClick() {
+		const selectedModels = this.lookup('playlistGrid').getSelectionModel().getSelection();
+		const playing = false;
+		Ext.each(selectedModels, (item) => {
 			if (item.get('playing')) {
 				playing = true;
 				return false;
@@ -189,35 +187,35 @@ Ext.define('MusicSearch.view.main.MainController', {
 		this.getStore('playlist').remove(selectedModels);
 	},
 
-	onClearPlaylistButtonClick: function() {
+	onClearPlaylistButtonClick() {
 		this.stopSong();
 		this.getStore('playlist').removeAll();
 	},
 
-	onVolumeSliderChange: function(slider, newValue) {
-		var ps = this.getViewModel().get('playingSound');
+	onVolumeSliderChange(slider, newValue) {
+		const ps = this.getViewModel().get('playingSound');
 		if (ps) {
 			ps.setVolume(newValue);
 		}
 	},
 
-	onProgressSliderDragStart: function() {
+	onProgressSliderDragStart() {
 		this.getViewModel().set('progressSliderDragging', true);
 	},
 
-	onProgressSliderChangeComplete: function(slider, newValue) {
+	onProgressSliderChangeComplete(slider, newValue) {
 		this.getViewModel().set('progressSliderDragging', false);
-		var ps = this.getViewModel().get('playingSound');
+		const ps = this.getViewModel().get('playingSound');
 		if (ps) {
 			ps.setPosition((newValue / 100) * ps.duration);
 		}
 	},
 
-	updateProgress: function() {
-		var slider = this.lookup('progressSlider');
-		var ps = this.getViewModel().get('playingSound');
+	updateProgress() {
+		const slider = this.lookup('progressSlider');
+		const ps = this.getViewModel().get('playingSound');
 		if (ps) {
-			var duration = ps.duration;
+			const duration = ps.duration;
 
 			if (duration > 0) {
 				if (!slider.thumbs[0].dragging) {
@@ -233,12 +231,12 @@ Ext.define('MusicSearch.view.main.MainController', {
 		}
 	},
 
-	playSong: function(song) {
+	playSong(song) {
 		this.stopSong();
 
-		var me = this;
+		const me = this;
 
-		var playingSound = soundManager.createSound({
+		const playingSound = soundManager.createSound({
 			id: 'currentSound',
 			url: 'downloadMusic?docId=' + song.getId(),
 			type: song.get('encoding'),
@@ -246,19 +244,19 @@ Ext.define('MusicSearch.view.main.MainController', {
 			autoPlay: true,
 			volume: this.lookup('volumeSlider').getValue(),
 
-			onstop: function() {
+			onstop() {
 				me.onSoundManagerStop();
 			},
-			onfinish: function() {
+			onfinish() {
 				me.onSoundManagerFinish();
 			},
-			whileplaying: function() {
+			whileplaying() {
 				me.updateProgress();
 			}
 		});
 
-		var ix = -1;
-		this.getStore('playlist').each(function(rec, i, len) {
+		let ix = -1;
+		this.getStore('playlist').each((rec, i, len) => {
 			if (rec.getId() === song.getId()) {
 				rec.set('playing', true);
 				ix = i;
@@ -277,8 +275,8 @@ Ext.define('MusicSearch.view.main.MainController', {
 		this.lookup('pauseButton').toggle(false, false);
 	},
 
-	stopSong: function() {
-		var ps = this.getViewModel().get('playingSound');
+	stopSong() {
+		const ps = this.getViewModel().get('playingSound');
 		if (ps) {
 			ps.song.set('playing', false);
 			ps.stop();
@@ -287,10 +285,10 @@ Ext.define('MusicSearch.view.main.MainController', {
 		}
 	},
 
-	onSoundManagerStop: function() {
+	onSoundManagerStop() {
 		this.lookup('pauseButton').toggle(false, false);
 
-		var playingSound = this.getViewModel().get('playingSound');
+		const playingSound = this.getViewModel().get('playingSound');
 		this.getViewModel().set('playingSound', null);
 
 		this.lookup('progressSlider').setValue(0);
@@ -301,12 +299,12 @@ Ext.define('MusicSearch.view.main.MainController', {
 		this.lookup('playlistGrid').getSelectionModel().deselectAll();
 	},
 
-	onSoundManagerFinish: function(controller, sound) {
-		var playlistStore = this.getStore('playlist');
+	onSoundManagerFinish(controller, sound) {
+		const playlistStore = this.getStore('playlist');
 		this.lookup('progressSlider').setValue(0);
 
-		var songIndex = this.getViewModel().get('playingSound').songIndex;
-		var record = playlistStore.getAt(songIndex + 1);
+		const songIndex = this.getViewModel().get('playingSound').songIndex;
+		const record = playlistStore.getAt(songIndex + 1);
 		if (record) {
 			this.playSong(record);
 		}

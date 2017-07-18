@@ -10,7 +10,7 @@ Ext.define('MusicSearch.Application', {
         }
     },
 
-	constructor: function() {
+	constructor() {
 		soundManager.setup({
 			url: serverUrl + 'resources/swf/'
 		});
@@ -22,7 +22,7 @@ Ext.define('MusicSearch.Application', {
 		this.callParent();
 	},
 
-	onAppUpdate: function() {
+	onAppUpdate() {
 		window.location.reload();
 	}
 });
