@@ -1,8 +1,6 @@
 Ext.define('MusicSearch.view.main.Main', {
 	extend: 'Ext.panel.Panel',
 
-	requires: [ 'Ext.plugin.Viewport', 'Ext.window.MessageBox', 'MusicSearch.view.main.MainController', 'MusicSearch.view.main.MainModel' ],
-
 	controller: {
 		xclass: 'MusicSearch.view.main.MainController'
 	},
