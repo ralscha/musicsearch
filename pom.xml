@@ -12,7 +12,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.4.RELEASE</version>
+		<version>1.5.6.RELEASE</version>
 	</parent>
 
 	<properties>
@@ -92,14 +92,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.6.1</version>
+				<version>3.6.2</version>
 				<configuration>
 					<debug>true</debug>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
-					<compilerArgs>
-						<compilerArg>-parameters</compilerArg>
-					</compilerArgs>
+					<parameters>true</parameters>
 				</configuration>
 			</plugin>
 
