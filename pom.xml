@@ -72,12 +72,6 @@
 			<version>2.0.3</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-			<optional>true</optional>
-		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -98,6 +92,13 @@
 					<source>${java.version}</source>
 					<target>${java.version}</target>
 					<parameters>true</parameters>
+					<annotationProcessorPaths>					
+						<path>
+							<groupId>org.springframework.boot</groupId>
+							<artifactId>spring-boot-configuration-processor</artifactId>
+							<version>1.5.9.RELEASE</version>
+						</path>
+					</annotationProcessorPaths>					
 				</configuration>
 			</plugin>
 
