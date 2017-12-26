@@ -75,12 +75,15 @@
 	</dependencies>
 
 	<build>
-	     <finalName>musicsearch</finalName>
+		<finalName>musicsearch</finalName>
 		<plugins>
 
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<executable>true</executable>
+				</configuration>
 			</plugin>
 
 			<plugin>
@@ -92,13 +95,13 @@
 					<source>${java.version}</source>
 					<target>${java.version}</target>
 					<parameters>true</parameters>
-					<annotationProcessorPaths>					
+					<annotationProcessorPaths>
 						<path>
 							<groupId>org.springframework.boot</groupId>
 							<artifactId>spring-boot-configuration-processor</artifactId>
 							<version>1.5.9.RELEASE</version>
 						</path>
-					</annotationProcessorPaths>					
+					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
 
@@ -204,7 +207,7 @@
 
 								<replace file="${basedir}/target/classes/static/index.html">
 									<replacefilter token="var serverUrl = 'http://localhost:8080/';"
-										value="var serverUrl = '';" />										
+										value="var serverUrl = '';" />
 								</replace>
 
 							</target>
