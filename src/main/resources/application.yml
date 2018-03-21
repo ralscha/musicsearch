@@ -6,7 +6,8 @@ server:
 
 spring:
   resources:
-    cache-period: 31556926
+    cache:
+      period: 31556926
   mvc:
     favicon:
       enabled: false
