@@ -20,7 +20,7 @@
 		<start-class>ch.rasc.musicsearch.Application</start-class>
 		<java.version>1.8</java.version>
 		<eds.version>1.7.5</eds.version>
-		<lucene.version>7.5.0</lucene.version>
+		<lucene.version>7.6.0</lucene.version>
 	</properties>
 
 	<dependencies>
