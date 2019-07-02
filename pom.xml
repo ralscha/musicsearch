@@ -19,7 +19,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<start-class>ch.rasc.musicsearch.Application</start-class>
 		<java.version>1.8</java.version>
-		<eds.version>1.7.5</eds.version>
+		<eds.version>1.8.1</eds.version>
 		<lucene.version>8.1.1</lucene.version>
 	</properties>
 
