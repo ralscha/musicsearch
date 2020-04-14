@@ -7,4 +7,3 @@ Demo application built with
   - [Spring Boot](http://projects.spring.io/spring-boot/)
   - [Java 8](http://www.oracle.com/technetwork/java/javase/overview/index.html)
 
-Online: https://demo.rasc.ch/musicsearch/
