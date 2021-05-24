@@ -12,13 +12,13 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.4.5</version>
+		<version>2.5.0</version>
 	</parent>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<start-class>ch.rasc.musicsearch.Application</start-class>
-		<java.version>11</java.version>
+		<java.version>16</java.version>
 		<eds.version>1.8.1</eds.version>
 		<lucene.version>8.8.2</lucene.version>
 	</properties>
